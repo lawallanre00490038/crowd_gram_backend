@@ -7,7 +7,9 @@ from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
-DATABASE_URL = "postgresql+asyncpg://postgres:lawal@127.0.0.1:5433/aiogram"
+DATABASE_URL_ASYNC = os.getenv("DATABASE_URL_ASYNC")
+
+DATABASE_URL = DATABASE_URL_ASYNC
 
 
 # Convert URL to async driver
