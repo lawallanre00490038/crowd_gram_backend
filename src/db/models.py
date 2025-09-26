@@ -45,15 +45,12 @@ class TaskType(str, Enum):
 
 class Status(str, Enum):
     pending = "pending"
-    in_progress = "in_progress"
     assigned = "assigned"
     submitted = "submitted"
-    under_review = "under_review"
     reviewed = "reviewed"
     accepted = "accepted"
     approved = "approved"
     rejected = "rejected"
-    revoked = "revoked"
 
 
 # ----------------------------

@@ -53,7 +53,9 @@ async def upload_users_excel(file: UploadFile = File(...), session: AsyncSession
     ✅ If a user already exists (by email), they are **skipped**.
     """
     created = await process_excel_users(session, file)
-    return {"created": created}
+    return {
+        "created": created
+    }
 
 
 # ============================================================

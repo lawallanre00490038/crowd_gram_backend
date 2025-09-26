@@ -3,50 +3,6 @@ from sqlmodel import Session, select
 from src.db.models import Project, ProjectAllocation, CoinPayment, Status, Submission
 from sqlalchemy.ext.asyncio import AsyncSession
 
-# async def award_coins_on_accept(session: AsyncSession, submission: Submission):
-#     """
-#     Award coins to a contributor when their submission is accepted/approved.
-#     """
-#     if submission.status not in (Status.approved, Status.accepted):
-#         return
-
-#     # Find allocation directly via submission.assignment_id
-#     alloc_result = await session.execute(
-#         select(ProjectAllocation).where(ProjectAllocation.submission_id == submission.id)
-#     )
-#     alloc = alloc_result.scalars().first()
-
-#     if not alloc:
-#         # nothing to award against
-#         return
-
-#     # Prevent double payment
-#     existing_result = session.execute(
-#         select(CoinPayment).where(
-#             CoinPayment.assignment_id == alloc.id,
-#             CoinPayment.user_id == submission.user_id
-#         )
-#     )
-#     existing = existing_result.scalars().first()
-#     if existing:
-#         return
-
-#     proj = await session.get(Project, alloc.project_id) if alloc.project_id else None
-#     coin_amt = proj.agent_coin if proj else 0.0
-
-#     coin = CoinPayment(
-#         user_id=submission.user_id,
-#         project_id=alloc.project_id,
-#         assignment_id=alloc.id,   # <-- matches your refactored model
-#         task_id=submission.task_id,
-#         coins_earned=coin_amt,
-#         approved=True,
-#     )
-#     session.add(coin)
-#     await session.commit()
-#     await session.refresh(coin)
-#     return coin
-
 
 async def award_coins_on_accept(session: AsyncSession, submission: Submission):
     """
@@ -104,12 +60,12 @@ async def award_reviewer_payment(session: AsyncSession, reviewer_id: str, projec
         select(CoinPayment).where(
             CoinPayment.user_id == reviewer_id,
             CoinPayment.project_id == project_id,
-            CoinPayment.task_id.is_(None),  # reviewer payments have no specific task
+            CoinPayment.task_id.is_(None),
         )
     )
     existing = existing_result.scalars().first()
     if existing:
-        return existing  # already paid
+        return existing
 
     project = await session.get(Project, project_id)
     if not project:

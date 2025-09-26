@@ -30,7 +30,7 @@ async def read_tasks(offset: int = 0, limit: int = 100, session: AsyncSession = 
         - Useful for admin dashboards or task management views.
         - Supports pagination to avoid large payloads.
     """
-    result = session.execute(select(Task).offset(offset).limit(limit))
+    result = await session.execute(select(Task).offset(offset).limit(limit))
     tasks = result.scalars().all()
     return tasks
 

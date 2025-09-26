@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlmodel import Session, select
 from fastapi import HTTPException, UploadFile
-from src.db.models import User
+from src.db.models import User, Role
 from src.utils.auth import get_password_hash
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -56,11 +56,18 @@ async def process_excel_users(session: AsyncSession, file: UploadFile):
 
         password = str(row.get("password", ""))
         hashed_password = get_password_hash(password) if password else None
+        
+
+        role_str = row.get("role", "agent")
+        try:
+            role_enum = Role(role_str)
+        except ValueError:
+            role_enum = Role.agent
 
         user = User(
             name=str(row["name"]).strip(),
             email=email,
-            role=row.get("role", "agent"),
+            role=role_enum,
             password=hashed_password,
             telegram_id=row.get("telegram_id", None),
             languages=languages_list,
@@ -72,4 +79,9 @@ async def process_excel_users(session: AsyncSession, file: UploadFile):
         created_users.append(user)
 
     await session.commit()
-    return {"count": created, "users": created_users}
+    
+    print(f"Created {created} users")
+    return {
+        "count": created, 
+        "users": created_users
+    }

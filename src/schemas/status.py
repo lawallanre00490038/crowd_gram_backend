@@ -56,6 +56,8 @@ class ProjectReviewerStats(BaseModel):
     rejected: int
     pending: int
     number_assigned: int
+    total_coins_earned: int
+    total_amount_earned: float
 
 class ReviewerStats(BaseModel):
     reviewer_email: str

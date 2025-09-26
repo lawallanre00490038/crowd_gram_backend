@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from fastapi import HTTPException
 from typing import List
 from sqlmodel import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,7 +21,7 @@ from src.db.models import (
     ReviewerAllocation,
 )
 
-# ------------------- CONTRIBUTOR STATS -------------------
+
 # ------------------- CONTRIBUTOR STATS -------------------
 async def get_contributor_stats(
     session: AsyncSession, email: str, start: datetime = None, end: datetime = None
@@ -136,82 +137,16 @@ async def get_contributor_stats(
 
 
 # ------------------- REVIEWER STATS -------------------
-# async def get_reviewer_stats(
-#     session: AsyncSession, email: str, start: datetime = None, end: datetime = None
-# ):
-#     """Return stats for a reviewer (looked up by email)."""
-
-#     # Step 1: Find reviewer by email
-#     reviewer_result = await session.execute(select(User).where(User.email == email))
-#     reviewer = reviewer_result.scalar_one_or_none()
-#     if not reviewer:
-#         return {"error": f"No reviewer found with email {email}"}
-
-#     # Step 2: Reviews they performed
-#     review_query = (
-#         select(Review)
-#         .where(Review.reviewer_id == reviewer.id)
-#         .options(selectinload(Review.submission).selectinload(Submission.assignment).selectinload(ProjectAllocation.project))
-#     )
-#     if start:
-#         review_query = review_query.where(Review.created_at >= start)
-#     if end:
-#         review_query = review_query.where(Review.created_at <= end)
-
-#     reviews: List[Review] = (await session.execute(review_query)).scalars().all()
-
-#     # Step 3: Overall stats
-#     total_reviewed = len(reviews)
-#     approved = sum(1 for r in reviews if r.decision == Status.accepted)
-#     rejected = sum(1 for r in reviews if r.decision == Status.rejected)
-#     pending = sum(1 for r in reviews if r.decision in (Status.pending, Status.submitted))
-
-#     # Step 4: Per-project stats
-#     project_stats = {}
-#     for review in reviews:
-#         submission = review.submission
-#         if not submission or not submission.assignment or not submission.assignment.project:
-#             continue
-
-#         project = submission.assignment.project
-#         key = project.id
-
-#         if key not in project_stats:
-#             project_stats[key] = {
-#                 "project_id": project.id,
-#                 "project_name": project.name,
-#                 "total_reviewed": 0,
-#                 "approved": 0,
-#                 "rejected": 0,
-#                 "pending": 0,
-#             }
-
-#         project_stats[key]["total_reviewed"] += 1
-#         if review.decision == Status.accepted:
-#             project_stats[key]["approved"] += 1
-#         elif review.decision == Status.rejected:
-#             project_stats[key]["rejected"] += 1
-#         elif review.decision in (Status.pending, Status.submitted):
-#             project_stats[key]["pending"] += 1
-
-#     return {
-#         "reviewer_email": email,
-#         "total_reviewed": total_reviewed,
-#         "approved_reviews": approved,
-#         "rejected_reviews": rejected,
-#         "pending_reviews": pending,
-#         "per_project": list(project_stats.values()),
-#     }
-
+# ------------------- REVIEWER STATS (Corrected) -------------------
 async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime = None, end: datetime = None):
     """Return stats for a reviewer (looked up by email)."""
 
     reviewer_result = await session.execute(select(User).where(User.email == email))
     reviewer = reviewer_result.scalar_one_or_none()
     if not reviewer:
-        return {"error": f"No reviewer found with email {email}"}
+        raise HTTPException(status_code=404, detail=f"No reviewer found with email {email}")
 
-    # 1️⃣ Number of review tasks assigned
+    # 1. Fetch Allocations
     alloc_query = (
         select(ReviewerAllocation)
         .where(ReviewerAllocation.reviewer_id == reviewer.id)
@@ -225,10 +160,9 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
         alloc_query = alloc_query.where(ReviewerAllocation.assigned_at >= start)
     if end:
         alloc_query = alloc_query.where(ReviewerAllocation.assigned_at <= end)
-
     allocations: List[ReviewerAllocation] = (await session.execute(alloc_query)).scalars().all()
 
-    # 2️⃣ Reviews actually completed
+    # 2. Fetch Reviews
     review_query = (
         select(Review)
         .where(Review.reviewer_id == reviewer.id)
@@ -242,68 +176,179 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
         review_query = review_query.where(Review.created_at >= start)
     if end:
         review_query = review_query.where(Review.created_at <= end)
-
     reviews: List[Review] = (await session.execute(review_query)).scalars().all()
 
+    # 3. Fetch Coin Payments
+    coin_query = select(CoinPayment).where(CoinPayment.user_id == reviewer.id)
+    coin_payments: List[CoinPayment] = (await session.execute(coin_query)).scalars().all()
+
+    # --- Aggregate Stats ---
     total_reviewed = len(reviews)
     approved = sum(1 for r in reviews if r.decision == Status.accepted)
     rejected = sum(1 for r in reviews if r.decision == Status.rejected)
-    pending = sum(1 for r in reviews if r.decision is None)
+    # FIX 1: Calculate the number of pending reviews
+    pending = total_reviewed - (approved + rejected)
 
-    # Per-project stats
+    # --- Per-project stats ---
     project_stats = {}
-    # number assigned per project
+
+    all_related_items = allocations + [r.submission for r in reviews if r.submission]
+    for item in all_related_items:
+        project = item.submission.assignment.project if hasattr(item, 'submission') and item.submission and item.submission.assignment else None
+        if not project:
+            continue
+        
+        key = project.id
+        if key not in project_stats:
+            project_stats[key] = {
+                "project_id": project.id,
+                "project_name": project.name,
+                "number_assigned": 0,
+                "total_reviewed": 0,
+                "approved": 0,
+                "rejected": 0,
+                "pending": 0,  # FIX 2: Ensure 'pending' is in the project dictionary
+                "total_coins_earned": 0,
+                "total_amount_earned": 0,
+                "reviewer_amount": project.reviewer_amount,
+            }
+
     for alloc in allocations:
-        submission = alloc.submission
-        project = submission.assignment.project if submission and submission.assignment else None
-        if not project:
-            continue
-        key = project.id
-        if key not in project_stats:
-            project_stats[key] = {
-                "project_id": project.id,
-                "project_name": project.name,
-                "number_assigned": 0,
-                "total_reviewed": 0,
-                "approved": 0,
-                "rejected": 0,
-                "pending": 0,
-            }
-        project_stats[key]["number_assigned"] += 1
+        project = alloc.submission.assignment.project if alloc.submission and alloc.submission.assignment else None
+        if project and project.id in project_stats:
+            project_stats[project.id]["number_assigned"] += 1
 
-    # add completed reviews per project
     for review in reviews:
-        submission = review.submission
-        project = submission.assignment.project if submission and submission.assignment else None
-        if not project:
-            continue
-        key = project.id
-        if key not in project_stats:
-            project_stats[key] = {
-                "project_id": project.id,
-                "project_name": project.name,
-                "number_assigned": 0,
-                "total_reviewed": 0,
-                "approved": 0,
-                "rejected": 0,
-                "pending": 0,
-            }
-        project_stats[key]["total_reviewed"] += 1
-        if review.decision == Status.accepted:
-            project_stats[key]["approved"] += 1
-        elif review.decision == Status.rejected:
-            project_stats[key]["rejected"] += 1
-        else:
-            project_stats[key]["pending"] += 1
+        project = review.submission.assignment.project if review.submission and review.submission.assignment else None
+        if project and project.id in project_stats:
+            stats = project_stats[project.id]
+            stats["total_reviewed"] += 1
+            if review.decision == Status.accepted:
+                stats["approved"] += 1
+            elif review.decision == Status.rejected:
+                stats["rejected"] += 1
+            else:
+                # FIX 3: Increment the per-project pending count
+                stats["pending"] += 1
 
+    for key, stats in project_stats.items():
+        stats["total_coins_earned"] = sum(c.coins_earned for c in coin_payments if c.project_id == key)
+        stats["total_amount_earned"] = stats["total_coins_earned"] * stats["reviewer_amount"]
+        del stats["reviewer_amount"]
+
+    # FIX 4: Add the missing 'pending_reviews' field to the final response
     return {
         "reviewer_email": email,
         "total_reviewed": total_reviewed,
         "approved_reviews": approved,
         "rejected_reviews": rejected,
-        "pending_reviews": pending,
+        "pending_reviews": pending, # This field was missing
         "per_project": list(project_stats.values()),
     }
+
+
+
+# async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime = None, end: datetime = None):
+#     """Return stats for a reviewer (looked up by email)."""
+
+#     reviewer_result = await session.execute(select(User).where(User.email == email))
+#     reviewer = reviewer_result.scalar_one_or_none()
+#     if not reviewer:
+#         return {"error": f"No reviewer found with email {email}"}
+
+#     # 1️⃣ Number of review tasks assigned
+#     alloc_query = (
+#         select(ReviewerAllocation)
+#         .where(ReviewerAllocation.reviewer_id == reviewer.id)
+#         .options(
+#             selectinload(ReviewerAllocation.submission)
+#             .selectinload(Submission.assignment)
+#             .selectinload(ProjectAllocation.project)
+#         )
+#     )
+#     if start:
+#         alloc_query = alloc_query.where(ReviewerAllocation.assigned_at >= start)
+#     if end:
+#         alloc_query = alloc_query.where(ReviewerAllocation.assigned_at <= end)
+
+#     allocations: List[ReviewerAllocation] = (await session.execute(alloc_query)).scalars().all()
+
+#     # 2️⃣ Reviews actually completed
+#     review_query = (
+#         select(Review)
+#         .where(Review.reviewer_id == reviewer.id)
+#         .options(
+#             selectinload(Review.submission)
+#             .selectinload(Submission.assignment)
+#             .selectinload(ProjectAllocation.project)
+#         )
+#     )
+#     if start:
+#         review_query = review_query.where(Review.created_at >= start)
+#     if end:
+#         review_query = review_query.where(Review.created_at <= end)
+
+#     reviews: List[Review] = (await session.execute(review_query)).scalars().all()
+
+#     total_reviewed = len(reviews)
+#     approved = sum(1 for r in reviews if r.decision == Status.accepted)
+#     rejected = sum(1 for r in reviews if r.decision == Status.rejected)
+#     pending = sum(1 for r in reviews if r.decision is None)
+
+#     # Per-project stats
+#     project_stats = {}
+#     # number assigned per project
+#     for alloc in allocations:
+#         submission = alloc.submission
+#         project = submission.assignment.project if submission and submission.assignment else None
+#         if not project:
+#             continue
+#         key = project.id
+#         if key not in project_stats:
+#             project_stats[key] = {
+#                 "project_id": project.id,
+#                 "project_name": project.name,
+#                 "number_assigned": 0,
+#                 "total_reviewed": 0,
+#                 "approved": 0,
+#                 "rejected": 0,
+#                 "pending": 0,
+#             }
+#         project_stats[key]["number_assigned"] += 1
+
+#     # add completed reviews per project
+#     for review in reviews:
+#         submission = review.submission
+#         project = submission.assignment.project if submission and submission.assignment else None
+#         if not project:
+#             continue
+#         key = project.id
+#         if key not in project_stats:
+#             project_stats[key] = {
+#                 "project_id": project.id,
+#                 "project_name": project.name,
+#                 "number_assigned": 0,
+#                 "total_reviewed": 0,
+#                 "approved": 0,
+#                 "rejected": 0,
+#                 "pending": 0,
+#             }
+#         project_stats[key]["total_reviewed"] += 1
+#         if review.decision == Status.accepted:
+#             project_stats[key]["approved"] += 1
+#         elif review.decision == Status.rejected:
+#             project_stats[key]["rejected"] += 1
+#         else:
+#             project_stats[key]["pending"] += 1
+
+#     return {
+#         "reviewer_email": email,
+#         "total_reviewed": total_reviewed,
+#         "approved_reviews": approved,
+#         "rejected_reviews": rejected,
+#         "pending_reviews": pending,
+#         "per_project": list(project_stats.values()),
+#     }
 
 
 

@@ -1,6 +1,7 @@
 import io
 import pandas as pd
 from datetime import datetime
+from io import BytesIO
 from typing import List, Optional, Dict
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Body, Query
 from sqlmodel import Session, select
@@ -18,6 +19,7 @@ from src.db.models import (
   User, 
   Status,
   Review,
+  Project,
   ProjectAllocation,
   Task
 )
@@ -104,9 +106,6 @@ async def assign_submission_to_reviewer(
 
 
 
-
-
-
 @router.post("/upload_reviewer_allocations/")
 async def upload_reviewer_allocations(
     project_id: str,
@@ -137,42 +136,46 @@ async def upload_reviewer_allocations(
     - HTTPException 400: If required columns are missing.
     - HTTPException 404: If a reviewer email or submission ID does not exist.
     """
-    df = pd.read_excel(file.file)
+
+    df = pd.read_excel(BytesIO(await file.read()))
 
     required_cols = {"submission_id", "reviewer_email"}
     if not required_cols.issubset(df.columns):
         raise HTTPException(status_code=400, detail=f"Excel must have {required_cols}")
 
+    # ✅ Pre-fetch reviewers into dict
+    reviewer_emails = df["reviewer_email"].dropna().unique().tolist()
+    result = await session.execute(select(User).where(User.email.in_(reviewer_emails)))
+    reviewers = {u.email: u for u in result.scalars().all()}
+
+    # ✅ Pre-fetch submissions into dict
+    submission_ids = df["submission_id"].dropna().unique().tolist()
+    sub_result = await session.execute(
+        select(Submission).where(
+            Submission.id.in_(submission_ids),
+            Submission.task.has(Project.id == project_id)  # ensures submission belongs to project
+        )
+    )
+    submissions = {s.id: s for s in sub_result.scalars().all()}
+
     allocations = []
+    skipped = []
 
     for _, row in df.iterrows():
         reviewer_email = row["reviewer_email"]
         submission_id = row["submission_id"]
 
-        # ✅ Get reviewer by email
-        result = await session.execute(
-            select(User).where(User.email == reviewer_email)
-        )
-        reviewer = result.scalar_one_or_none()
+        reviewer = reviewers.get(reviewer_email)
+        submission = submissions.get(submission_id)
+
         if not reviewer:
-            raise HTTPException(status_code=404, detail=f"Reviewer {reviewer_email} not found")
-
-        # ✅ Check submission exists
-        sub_result = await session.execute(
-            select(Submission).where(Submission.id == submission_id)
-        )
-        submission = sub_result.scalar_one_or_none()
+            skipped.append(f"Reviewer {reviewer_email} not found")
+            continue
         if not submission:
-            raise HTTPException(status_code=404, detail=f"Submission {submission_id} not found")
-        if not submission.task or submission.task.project_id != project_id:
-            raise HTTPException(
-                status_code=400, 
-                detail=f"Submission {submission_id} does not belong to project {project_id}"
-            )
+            skipped.append(f"Submission {submission_id} invalid for project {project_id}")
+            continue
 
-
-        
-        # Skip allocation if reviewer already assigned and not rejected
+        # Skip duplicate if exists and not rejected
         existing_result = await session.execute(
             select(ReviewerAllocation).where(
                 ReviewerAllocation.submission_id == submission.id,
@@ -181,26 +184,30 @@ async def upload_reviewer_allocations(
             )
         )
         if existing_result.scalars().first():
-            continue  # skip duplicate
+            skipped.append(f"Duplicate allocation for {reviewer_email} -> submission {submission_id}")
+            continue
 
+        assigned_at = (
+            row["assigned_at"] if "assigned_at" in df.columns and pd.notna(row["assigned_at"])
+            else datetime.utcnow()
+        )
 
-        # ✅ Create allocation
         allocation = ReviewerAllocation(
             submission_id=submission.id,
             reviewer_id=reviewer.id,
             status=Status.pending,
-            assigned_at=row.get("assigned_at") or datetime.utcnow()
+            assigned_at=assigned_at
         )
         session.add(allocation)
         allocations.append(allocation)
 
     await session.commit()
+
     return {
-      "uploaded": len(allocations), 
-      "details": [a.id for a in allocations]
+        "uploaded": len(allocations),
+        "skipped": skipped,
+        "details": [a.id for a in allocations]
     }
-
-
 
 
 
@@ -354,6 +361,9 @@ async def review_submission(
         "project_review_threshold": project.review_threshold_percent,
         "scored_percent": scored_percent
     }
+
+
+
 
 
 

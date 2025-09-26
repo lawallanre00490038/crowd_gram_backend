@@ -239,17 +239,33 @@ async def list_project_tasks_assigned_to_agents(
     prompt_id: Optional[str] = None,
     session: AsyncSession = Depends(get_session)
 ):
-    # Fetch project with allocations and submissions
+    # ✅ Fetch project with all necessary relationships eagerly loaded
     result = await session.execute(
         select(Project)
         .options(
+            # --- Keep your existing loads ---
             selectinload(Project.tasks).selectinload(Task.prompt),
-            selectinload(Project.tasks).selectinload(Task.allocations).selectinload(ProjectAllocation.user),
-            selectinload(Project.tasks).selectinload(Task.allocations).selectinload(ProjectAllocation.submission).selectinload(Submission.review_allocations).selectinload(ReviewerAllocation.reviewer)
+            selectinload(Project.tasks)
+                .selectinload(Task.allocations)
+                .selectinload(ProjectAllocation.user),
+            
+            # --- Modify this section to add the new loads ---
+            selectinload(Project.tasks)
+                .selectinload(Task.allocations)
+                .selectinload(ProjectAllocation.submission)
+                .options(
+                    # 1. ADD THIS: Eagerly load the 'reviews' for each submission
+                    selectinload(Submission.reviews),
+                    
+                    # 2. ADD THIS: Eagerly load the 'reviewer' user for each review allocation
+                    selectinload(Submission.review_allocations)
+                        .selectinload(ReviewerAllocation.reviewer)
+                )
         )
         .where(Project.id == project_id)
     )
     project = result.scalars().first()
+
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
@@ -257,11 +273,14 @@ async def list_project_tasks_assigned_to_agents(
     for task in project.tasks:
         if prompt_id and task.prompt_id != prompt_id:
             continue
+
         for alloc in task.allocations:
-            # Filters
+            # ✅ Filters
             if status and alloc.status.value != status:
                 continue
-            email_value = alloc.user.email if alloc.user else alloc.user_email
+
+            # ✅ Use getattr to avoid triggering lazy-load
+            email_value = getattr(alloc.user, "email", None) or alloc.user_email
             if user_email and email_value != user_email:
                 continue
             if user_id and alloc.user_id != user_id:
@@ -269,23 +288,22 @@ async def list_project_tasks_assigned_to_agents(
 
             submission = alloc.submission
 
-            # If submission has reviewer allocations, attach them to the review field
+            # ✅ Collect reviewer allocations (all reviewers, not just first pending)
             review_info = ReviewInfo(reviewers=[])
             if submission and submission.review_allocations:
                 for rev_alloc in submission.review_allocations:
-                    if rev_alloc.status == Status.pending:
-                        reviewer = ReviewerInfo(
-                            reviewer_id=rev_alloc.reviewer_id,
-                            reviewer_email=rev_alloc.reviewer.email if rev_alloc.reviewer else None,
-                            review_scores=None,
-                            review_total_score=None,
-                            review_decision=rev_alloc.status.value,
-                            review_comments=None,
-                            total_coins_earned=None
-                        )
-                        review_info.reviewers.append(reviewer)
-                        break  # include only first pending reviewer
+                    reviewer = ReviewerInfo(
+                        reviewer_id=rev_alloc.reviewer_id,
+                        reviewer_email=getattr(rev_alloc.reviewer, "email", None),
+                        review_scores=None,
+                        review_total_score=None,
+                        review_decision=rev_alloc.status.value,
+                        review_comments=None,
+                        total_coins_earned=None
+                    )
+                    review_info.reviewers.append(reviewer)
 
+            # ✅ Build safe task details
             tasks_out.append(await build_task_details(
                 task,
                 alloc=alloc,
@@ -301,7 +319,6 @@ async def list_project_tasks_assigned_to_agents(
         project_name=project.name,
         tasks=tasks_out
     )
-
 
 
 

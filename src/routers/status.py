@@ -36,77 +36,8 @@ ALLOWED_STATUSES = [
     Status.assigned
 ]
 
-# ------------------------
-# Routes
-# ------------------------
-@router.get("/allocations", response_model=List[ProjectAllocationResponse])
-async def get_allocations(
-    user_id: Optional[str] = Query(None, description="Filter by user ID"),
-    email: Optional[str] = Query(None, description="Filter by user email"),
-    status: Optional[List[Status]] = Query([Status.pending], description="Filter by status(es)"),
-    reviewer: Optional[bool] = Query(False, description="If true, fetch reviewer allocations"),
-    session: AsyncSession = Depends(get_session)
-):
-    """
-    Fetch allocations filtered dynamically by user_id, email, and/or status.
-    If reviewer=True, fetch reviewer allocations instead of contributor allocations.
-    """
-    # Validate statuses
-    for s in status:
-        if s not in ALLOWED_STATUSES:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Status must be one of: {[s.value for s in ALLOWED_STATUSES]}"
-            )
-
-    if reviewer:
-        query = select(ReviewerAllocation).options(
-            selectinload(ReviewerAllocation.submission)
-            .selectinload(Submission.task),
-            selectinload(ReviewerAllocation.submission)
-            .selectinload(Submission.assignment)
-        )
-        if user_id:
-            query = query.where(ReviewerAllocation.reviewer_id == user_id)
-        if email:
-            # join with user table to filter by email
-            query = query.join(ReviewerAllocation.reviewer).where(User.email == email)
-        if status:
-            query = query.where(ReviewerAllocation.status.in_([s.value for s in status]))
-
-        result = await session.execute(query)
-        allocations = result.scalars().all()
-        # Transform for response model
-        response = [
-            ProjectAllocationResponse(
-                id=a.id,
-                user_id=a.reviewer_id,
-                user_email=a.reviewer.email if a.reviewer else None,
-                task_id=a.submission.task_id if a.submission else None,
-                project_id=a.submission.assignment.project_id if a.submission and a.submission.assignment else None,
-                status=a.status,
-                assigned_at=a.assigned_at
-            )
-            for a in allocations
-        ]
-        return response
-
-    else:
-        query = select(ProjectAllocation).options(selectinload(ProjectAllocation.project))
-        if user_id:
-            query = query.where(ProjectAllocation.user_id == user_id)
-        if email:
-            query = query.join(ProjectAllocation.user).where(User.email == email)
-        if status:
-            query = query.where(ProjectAllocation.status.in_([s.value for s in status]))
-
-        result = await session.execute(query)
-        allocations = result.scalars().all()
-        return allocations
-
 
 # -------------------Analytics Routes---------------------
-
 @router.get(
     "/contributor/{email}",
     response_model=ContributorStats,
@@ -135,6 +66,11 @@ async def reviewer_stats(
     session: AsyncSession = Depends(get_session),
 ):
     return await get_reviewer_stats(session, email, start, end)
+
+
+
+
+
 
 
 @router.get(
