@@ -1,0 +1,215 @@
+Build a scalable, modular FastAPI backend for Telegram-based crowdsourced data collection platform (audio, text, image) with task allocation, review workflow, S3 storage, analytics, and reward tracking
+
+Instructions for AI:
+
+Build a complete backend system using FastAPI, SQLModel, and PostgreSQL to manage a Telegram-based crowdsourcing platform for collecting multimodal data (audio, text, image). The system must be highly scalable, modular, and follow best practices. Include async database access with AsyncSession, proper role-based access control, and full task allocation and analytics capabilities.
+
+1. User Roles
+
+Contributor: Completes assigned tasks (audio, text, image).
+
+Reviewer: Reviews contributor submissions and grades them.
+
+Super Reviewer: Handles borderline cases and final approval.
+
+Admin: Manages users, tasks, analytics, and payments.
+
+Telegram Integration: Contributors and reviewers sign in via email or unique ID, linked to their Telegram account. Commands like /status allow them to check task progress.
+
+2. Task Types and Workflow
+2.1 Audio Task
+
+Contributor receives a text prompt in the Telegram bot.
+
+Contributor records audio corresponding to the text.
+
+Upon submission:
+
+Audio file is uploaded to AWS S3.
+
+Metadata is saved in Postgres DB and exported to Excel automatically.
+
+Metadata fields to store:
+
+speaker_id, transcript_id, transcript, audio_path, gender, age_group, edu_level, duration, language, snr, domain, category
+
+
+Reviewers evaluate the audio against the transcript and grade using parameters: Accuracy, Fluency, etc.
+
+Coins are awarded to contributors only after approval by a reviewer/super reviewer.
+
+2.2 Text Task
+
+Contributor translates a displayed text into a target language.
+
+Submission is stored in the DB.
+
+Reviewed by a reviewer for accuracy and fluency.
+
+Coins awarded after approval.
+
+2.3 Image Task
+
+Contributor uploads an image based on a text description or theme.
+
+Contributor may annotate the image (bounding boxes, labels, or other tags).
+
+Image stored in AWS S3, metadata stored in Postgres DB.
+
+Reviewer evaluates image quality and annotation accuracy.
+
+3. Task Allocation and Provisioning
+
+Tasks are pre-provisioned in the backend by admins using /create_task_batch API.
+
+Backend allocates tasks to contributors based on:
+
+Email or unique ID
+
+Language proficiency
+
+Skill level / role
+
+Past contributions
+
+Allocation logic:
+
+Split large task sets evenly (e.g., 600 texts for 60 contributors → 10 texts per contributor)
+
+Assign tasks to contributors only when they log in to Telegram bot
+
+Maintain task queue per user
+
+Track assigned, pending, completed, and reviewed tasks
+
+Contributors can query /status in Telegram:
+
+Sentences read, pending, reviewed, not reviewed, coins earned
+
+Reviewers can query /status:
+
+Tasks assigned to review, completed reviews, coins earned
+
+Reallocation:
+
+If contributors drop off, tasks are reassigned automatically to available contributors
+
+Notifications sent via Telegram (bot message / push)
+
+4. Metadata, Analytics, and Admin Monitoring
+
+Audio Task Metadata Table: Stores speaker_id, transcript_id, transcript, audio_path, gender, age_group, edu_level, duration, language, snr, domain, category.
+
+Analytics Table for Admins:
+
+Contributor Name, Contributor Email, Total Task Assigned, Hours Read, Hours Pending, Sentences Read
+
+
+Admin can filter by:
+
+Task type (audio, text, image)
+
+Contributor
+
+Time range
+
+Task domain or category
+
+Ability to export analytics to Excel or CSV.
+
+Reviewer analytics:
+
+Tasks reviewed
+
+Approved/rejected
+
+Coins earned
+
+Accuracy and fluency metrics
+
+5. Database Models (suggested)
+
+Users: id, name, email, role, gender, age_group, edu_level, languages, telegram_id
+
+Tasks: id, type, content, domain, category, assigned_to, status, deadline
+
+AudioSubmissions: id, user_id, task_id, s3_audio_path, duration, transcript, status, reviewer_id, review_scores
+
+TextSubmissions: id, user_id, task_id, source_text, translated_text, status, reviewer_id
+
+ImageSubmissions: id, user_id, task_id, s3_image_path, annotations, status, reviewer_id
+
+TaskAllocation: task_id, user_id, assigned_at, completed_at
+
+Coins / Payments: user_id, task_id, coins_earned, approved
+
+AuditLogs: user_id, action_type, timestamp, details
+
+6. API Endpoints
+Contributor
+
+/tasks: Get list of assigned tasks
+
+/task/{id}/submit: Submit audio/text/image
+
+/status: Get contributor status (tasks done, pending, coins earned)
+
+Reviewer
+
+/tasks_to_review: List of tasks to review
+
+/review/{submission_id}: Submit review (score Accuracy, Fluency)
+
+Admin
+
+/create_task_batch: Create and allocate tasks
+
+/analytics: Fetch contributor/reviewer analytics
+
+/export_data: Export submissions/analytics to Excel/CSV
+
+/manage_users: Add/remove users, assign roles
+
+File Upload
+
+Handle audio/image uploads to AWS S3 asynchronously
+
+7. Architecture and Best Practices
+
+Modular code structure: routers, services, models, utils
+
+Async DB access with AsyncSession
+
+Environment variables for secrets (DB, S3 credentials)
+
+Logging & monitoring
+
+Error handling & validation using Pydantic
+
+Background tasks for:
+
+Uploading files to S3
+
+Writing metadata to Excel
+
+Sending Telegram notifications
+
+Scalable design to support hundreds/thousands of contributors and reviewers
+
+8. Deliverables
+
+Fully functional FastAPI backend with PostgreSQL integration
+
+Async task allocation and management system
+
+AWS S3 integration for file storage
+
+Contributor/reviewer/admin APIs
+
+Telegram bot integration hooks (task delivery, status, submission)
+
+Analytics tables and Excel export
+
+Testable modular code with OpenAPI docs
+
+Deployment instructions and .env template

@@ -1,0 +1,547 @@
+import io
+import pandas as pd
+from datetime import datetime
+from typing import List, Optional, Dict
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, Body, Query
+from sqlmodel import Session, select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
+router = APIRouter()
+
+
+from src.db.database import get_session
+from src.services.coins import award_coins_on_accept, award_reviewer_payment  
+from src.db.models import (
+  ReviewerAllocation, 
+  Submission, 
+  User, 
+  Status,
+  Review,
+  ProjectAllocation,
+  Task
+)
+from src.schemas.reviewer_schema import (
+    FilterReviewResponse,
+    ReviewerHistoryResponse
+)
+
+
+router = APIRouter()
+
+
+@router.post("/assign_submission_to_reviewer/")
+async def assign_submission_to_reviewer(
+    project_id: str,
+    submission_id: str,
+    reviewer_id: str,
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Assign a single submission to a reviewer.
+
+    Flow:
+    1. Check if the submission is already assigned to this reviewer.
+    2. If not assigned, create a ReviewerAllocation with status "pending".
+    3. Commit to the database and return the allocation object.
+
+    Parameters:
+    - submission_id (str): ID of the submission to assign.
+    - reviewer_id (str): ID of the reviewer to assign the submission to.
+    - session (AsyncSession, dependency): Async database session.
+
+    Returns:
+    - ReviewerAllocation object containing allocation ID, submission ID, reviewer ID, status, and assigned_at timestamp.
+
+    Raises:
+    - HTTPException 400: If the submission is already assigned to the reviewer.
+    """
+    # Check if submission exists
+    sub_result = await session.execute(
+        select(Submission).where(Submission.id == submission_id)
+    )
+    submission = sub_result.scalar_one_or_none()
+    if not submission:
+        raise HTTPException(status_code=404, detail="Submission not found")
+    if not submission.task or submission.task.project_id != project_id:
+        raise HTTPException(status_code=400, detail="Submission does not belong to this project")
+
+
+    # Check if reviewer exists
+    reviewer_result = await session.execute(
+        select(User).where(User.id == reviewer_id)
+    )
+    reviewer = reviewer_result.scalar_one_or_none()
+    if not reviewer:
+        raise HTTPException(status_code=404, detail="Reviewer not found")
+
+    # Check if assignment already exists and is not rejected
+    existing_result = await session.execute(
+        select(ReviewerAllocation).where(
+            ReviewerAllocation.submission_id == submission_id,
+            ReviewerAllocation.reviewer_id == reviewer_id,
+            ReviewerAllocation.status != Status.rejected  # allow re-review only if rejected
+        )
+    )
+    existing = existing_result.scalars().first()
+    if existing:
+        raise HTTPException(
+            status_code=400,
+            detail="This submission is already assigned to the reviewer and not rejected"
+        )
+
+    # Create new allocation
+    allocation = ReviewerAllocation(
+        submission_id=submission_id,
+        reviewer_id=reviewer_id,
+        status=Status.pending,
+        assigned_at=datetime.utcnow()
+    )
+    session.add(allocation)
+    await session.commit()
+    await session.refresh(allocation)
+    return allocation
+
+
+
+
+
+
+@router.post("/upload_reviewer_allocations/")
+async def upload_reviewer_allocations(
+    project_id: str,
+    file: UploadFile,
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Bulk upload reviewer allocations from an Excel file.
+
+    Flow:
+    1. Read the uploaded Excel file.
+    2. Validate that required columns "submission_id" and "reviewer_email" exist.
+    3. For each row:
+       - Retrieve reviewer by email.
+       - Retrieve submission by ID.
+       - Create a ReviewerAllocation with status "pending" and optional assigned_at timestamp.
+    4. Commit all allocations to the database.
+    5. Return summary of uploaded allocations.
+
+    Parameters:
+    - file (UploadFile): Excel file containing columns "submission_id" and "reviewer_email".
+    - session (AsyncSession, dependency): Async database session.
+
+    Returns:
+    - dict: {"uploaded": int, "details": List[str]} with the number of allocations uploaded and their IDs.
+
+    Raises:
+    - HTTPException 400: If required columns are missing.
+    - HTTPException 404: If a reviewer email or submission ID does not exist.
+    """
+    df = pd.read_excel(file.file)
+
+    required_cols = {"submission_id", "reviewer_email"}
+    if not required_cols.issubset(df.columns):
+        raise HTTPException(status_code=400, detail=f"Excel must have {required_cols}")
+
+    allocations = []
+
+    for _, row in df.iterrows():
+        reviewer_email = row["reviewer_email"]
+        submission_id = row["submission_id"]
+
+        # ✅ Get reviewer by email
+        result = await session.execute(
+            select(User).where(User.email == reviewer_email)
+        )
+        reviewer = result.scalar_one_or_none()
+        if not reviewer:
+            raise HTTPException(status_code=404, detail=f"Reviewer {reviewer_email} not found")
+
+        # ✅ Check submission exists
+        sub_result = await session.execute(
+            select(Submission).where(Submission.id == submission_id)
+        )
+        submission = sub_result.scalar_one_or_none()
+        if not submission:
+            raise HTTPException(status_code=404, detail=f"Submission {submission_id} not found")
+        if not submission.task or submission.task.project_id != project_id:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Submission {submission_id} does not belong to project {project_id}"
+            )
+
+
+        
+        # Skip allocation if reviewer already assigned and not rejected
+        existing_result = await session.execute(
+            select(ReviewerAllocation).where(
+                ReviewerAllocation.submission_id == submission.id,
+                ReviewerAllocation.reviewer_id == reviewer.id,
+                ReviewerAllocation.status != Status.rejected
+            )
+        )
+        if existing_result.scalars().first():
+            continue  # skip duplicate
+
+
+        # ✅ Create allocation
+        allocation = ReviewerAllocation(
+            submission_id=submission.id,
+            reviewer_id=reviewer.id,
+            status=Status.pending,
+            assigned_at=row.get("assigned_at") or datetime.utcnow()
+        )
+        session.add(allocation)
+        allocations.append(allocation)
+
+    await session.commit()
+    return {
+      "uploaded": len(allocations), 
+      "details": [a.id for a in allocations]
+    }
+
+
+
+
+
+
+
+# ---------------------------
+# REVIEW SUBMISSION
+# ---------------------------
+
+@router.post("/submissions/{submission_id}/review")
+async def review_submission(
+    project_id: str,
+    submission_id: str,
+    reviewer_id: str,
+    scores: Dict[str, int],
+    comments: Optional[str] = None,
+    session: AsyncSession = Depends(get_session),
+):
+    """
+        Review a submission, calculate scores, and approve/reject.
+
+        **Flow**:
+        1. Retrieve submission and associated project.
+        2. Compute `total_score` based on `review_parameters` and reviewer scores.
+        3. Determine approval by comparing total score with project threshold.
+        4. Update submission status to `approved` or `rejected`.
+        5. Create a `Review` record for tracking.
+        6. Update `ProjectAllocation` and mark `completed_at`.
+        7. Award coins to submitter if approved.
+        8. Award payment to reviewer.
+
+        Args:
+            submission_id (str): ID of the submission being reviewed.
+            reviewer_id (str): ID of the reviewer performing the review.
+            scores (Dict[str, int]): Scores for each review parameter (e.g., {"accuracy": 4, "clarity": 5}).
+            comments (Optional[str]): Optional textual feedback from reviewer.
+            session (Session): Database session dependency.
+
+        Returns:
+            Dict[str, Any]: Contains submission status, total score, and approval boolean.
+
+        Raises:
+            HTTPException: 404 if submission or project does not exist.
+
+        Notes:
+            - Supports multi-parameter scoring.
+            - Automatically updates the submitter’s allocation and awards coins if approved.
+            - Review is recorded for audit and analytics purposes.
+    """
+
+    # 1️⃣ Fetch submission with project and allocation
+    result = await session.execute(
+        select(Submission)
+        .where(Submission.id == submission_id)
+        .options(
+            selectinload(Submission.task).selectinload(Task.project),
+            selectinload(Submission.assignment).selectinload(ProjectAllocation.project),
+        )
+    )
+    submission = result.scalars().first()
+    if not submission:
+        raise HTTPException(status_code=404, detail="Submission not found")
+
+    project = submission.task.project if submission.task else None
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if not submission.task or submission.task.project_id != project_id:
+        raise HTTPException(status_code=400, detail="Submission does not belong to this project")
+
+    # 2️⃣ Determine review parameters dynamically
+    review_params = project.review_parameters or list(scores.keys())
+    if not review_params:
+        review_params = list(scores.keys())
+
+    # 3️⃣ Calculate total score
+    total_score = sum([scores.get(param, 0) for param in review_params])
+    max_score = len(review_params) * (project.review_scale or 5)
+    threshold_score = project.review_threshold_percent / 100 * max_score
+    approved = total_score >= threshold_score
+    scored_percent = (total_score / max_score * 100) if max_score else 0
+
+    # 4️⃣ Update submission status
+    submission.status = Status.accepted if approved else Status.rejected
+    session.add(submission)
+
+    # 5️⃣ Create or update review record
+    existing_review_result = await session.execute(
+        select(Review)
+        .where(
+            Review.submission_id == submission.id,
+            Review.reviewer_id == reviewer_id
+        )
+    )
+    review = existing_review_result.scalars().first()
+    if review:
+        # update existing review
+        review.scores = scores
+        review.total_score = total_score
+        review.decision = submission.status
+        review.approved = approved
+        review.comments = comments
+    else:
+        # create new review
+        review = Review(
+            submission_id=submission.id,
+            reviewer_id=reviewer_id,
+            review_level="human",
+            scores=scores,
+            total_score=total_score,
+            decision=submission.status,
+            approved=approved,
+            comments=comments,
+        )
+    session.add(review)
+
+    # 6️⃣ Update ProjectAllocation if exists
+    if submission.assignment:
+        alloc = submission.assignment
+        alloc.status = submission.status
+        alloc.completed_at = datetime.utcnow()
+        session.add(alloc)
+
+    # 7️⃣ Update ReviewerAllocation if exists
+    result_review_alloc = await session.execute(
+        select(ReviewerAllocation)
+        .where(
+            ReviewerAllocation.submission_id == submission.id,
+            ReviewerAllocation.reviewer_id == reviewer_id
+        )
+    )
+    review_allocation = result_review_alloc.scalars().first()
+    if review_allocation:
+        review_allocation.status = submission.status
+        review_allocation.reviewed_at = datetime.utcnow()
+        session.add(review_allocation)
+
+    # 8️⃣ Commit all changes
+    await session.commit()
+    await session.refresh(submission)
+
+    # 9️⃣ Award coins/payment
+    if approved:
+        await award_coins_on_accept(session, submission)
+
+    await award_reviewer_payment(session, reviewer_id, project.id)
+
+    return {
+        "submission_status": submission.status,
+        "total_score": total_score,
+        "approved": approved,
+        "project_review_threshold": project.review_threshold_percent,
+        "scored_percent": scored_percent
+    }
+
+
+
+
+@router.patch("/update/{submission_id}/review", response_model=Submission)
+async def reviewer_review_submission(
+    project_id: str,
+    submission_id: str,
+    status: Status = Body(..., description="Decision: accepted, rejected, redo"),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Reviewer endpoint: approve/reject submissions.
+    - Allowed statuses: accepted, rejected, redo.
+    - Triggers coin award if accepted.
+    """
+    if status not in [Status.accepted, Status.rejected, Status.revoked]:
+        raise HTTPException(
+            status_code=400,
+            detail="Reviewer can only set status to accepted, rejected, or revoked",
+        )
+
+    result = await session.execute(
+        select(Submission)
+        .where(Submission.id == submission_id)
+        .options(selectinload(Submission.assignment))
+    )
+    submission = result.scalars().first()
+    if not submission:
+        raise HTTPException(status_code=404, detail="Submission not found")
+    if not submission.task or submission.task.project_id != project_id:
+        raise HTTPException(status_code=400, detail="Submission does not belong to this project")
+
+    submission.status = status
+
+    # propagate to allocation if exists
+    if submission.assignment:
+        alloc = submission.assignment
+        alloc.status = submission.status
+        alloc.completed_at = datetime.utcnow()
+        session.add(alloc)
+
+    # trigger coin award if accepted
+    if status == Status.accepted:
+        await award_coins_on_accept(session, submission)
+
+    session.add(submission)
+    await session.commit()
+    await session.refresh(submission)
+    return submission
+
+
+
+
+# ----------------------------
+# Filter Reviews
+# ----------------------------
+ALLOWED_STATUSES = [Status.pending, Status.accepted, Status.rejected]
+
+@router.get(
+    "/{reviewer_id}/filter", 
+    response_model=List[FilterReviewResponse]
+)
+async def get_reviewer_filtered_reviews(
+    reviewer_id: str,
+    project_id: Optional[str] = None,
+    status: Optional[List[Status]] = Query([Status.pending], description="Filter by status(es)"),
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Retrieve submissions assigned to a reviewer filtered by status.
+
+    Parameters:
+    - reviewer_id (str): ID of the reviewer
+    - status (List[Status], optional): Filter by one or more statuses (default: pending)
+    - session (AsyncSession): DB session
+
+    Returns:
+    - List[ReviewResponse]: Each submission with reviewer allocation info, prompt, file URL, contributor, and status
+    """
+    for s in status:
+        if s not in ALLOWED_STATUSES:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Status must be one of: {[s.value for s in ALLOWED_STATUSES]}"
+            )
+    # query = (
+    #     select(ReviewerAllocation)
+    #     .where(ReviewerAllocation.reviewer_id == reviewer_id)
+    #     .where(ReviewerAllocation.status.in_([s.value for s in status]))
+    #     .options(
+    #         selectinload(ReviewerAllocation.submission)
+    #         .selectinload(Submission.task),
+    #         selectinload(ReviewerAllocation.submission)
+    #         .selectinload(Submission.assignment)
+    #     )
+    # )
+    query = select(ReviewerAllocation).where(ReviewerAllocation.reviewer_id == reviewer_id)
+    if status:
+        query = query.where(ReviewerAllocation.status.in_([s.value for s in status]))
+    if project_id:
+        query = query.join(ReviewerAllocation.submission).where(Submission.task.has(Task.project_id == project_id))
+    query = query.options(
+        selectinload(ReviewerAllocation.submission).selectinload(Submission.task),
+        selectinload(ReviewerAllocation.submission).selectinload(Submission.assignment)
+    )
+
+    result = await session.execute(query)
+    allocations = result.scalars().all()
+
+    response = []
+    for alloc in allocations:
+        sub = alloc.submission
+        if not sub or not sub.task:
+            continue  # skip incomplete data
+        response.append(FilterReviewResponse(
+            reviewer_allocation_id=alloc.id,
+            submission_id=sub.id,
+            sentence_id=sub.task.prompt_id,
+            prompt=sub.task.prompt.text if sub.task.prompt else None,
+            file_url=sub.file_url,
+            payload_text=sub.payload_text,
+            contributor_id=sub.user_id,
+            assigned_at=alloc.assigned_at,
+            status=alloc.status
+        ))
+    return response
+
+
+
+
+
+# ----------------------------
+# Reviewer History
+# ----------------------------
+@router.get(
+    "/{reviewer_id}/history",
+    response_model=List[ReviewerHistoryResponse]
+)
+async def get_reviewer_history(
+    reviewer_id: str,
+    project_id: Optional[str] = None,
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Retrieve all historical submissions assigned to a reviewer.
+
+    Flow:
+    1. Query all ReviewerAllocation entries for the reviewer.
+    2. Load related Submission and Task details.
+    3. Return submission ID, sentence ID, prompt, contributor ID, status, and reviewed_at timestamp.
+
+    Parameters:
+    - reviewer_id (str, path): ID of the reviewer.
+    - session (AsyncSession, dependency): Async database session.
+
+    Returns:
+    - List[Dict]: Each dict includes submission_id, sentence_id (prompt ID), prompt, contributor_id, status, and reviewed_at timestamp.
+    """
+    # result = await session.execute(
+    #     select(ReviewerAllocation)
+    #     .where(ReviewerAllocation.reviewer_id == reviewer_id)
+    #     .options(
+    #         selectinload(ReviewerAllocation.submission)
+    #         .selectinload(Submission.task)
+    #     )
+    # )
+    query = select(ReviewerAllocation).where(ReviewerAllocation.reviewer_id == reviewer_id)
+    if project_id:
+        query = query.join(ReviewerAllocation.submission).where(Submission.task.has(Task.project_id == project_id))
+    query = query.options(selectinload(ReviewerAllocation.submission).selectinload(Submission.task))
+
+    result = await session.execute(query)
+
+    
+    allocations = result.scalars().all()
+
+    response = []
+    for alloc in allocations:
+        sub = alloc.submission
+        if not sub or not sub.task:
+            continue
+        response.append(ReviewerHistoryResponse(
+            submission_id=sub.id,
+            sentence_id=sub.task.prompt_id,
+            prompt=sub.task.prompt.text if sub.task.prompt else None,
+            contributor_id=sub.user_id,
+            status=alloc.status,
+            reviewed_at=alloc.reviewed_at
+        ))
+    return response

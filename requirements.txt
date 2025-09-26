@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlmodel
+psycopg2-binary
+python-dotenv
+aiobotocore
+openpyxl
+pandas
+python-multipart
+passlib[bcrypt] 
+python-jose[cryptography]
+jwt
+pydantic[email]
+asyncpg

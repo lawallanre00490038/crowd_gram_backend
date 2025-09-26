@@ -1,0 +1,148 @@
+from datetime import datetime
+from pydantic import BaseModel
+from typing import List, Optional
+from typing import List, Optional
+from pydantic import BaseModel, Field, conint, confloat
+from typing import Dict
+
+from src.db.models import TaskType
+
+
+
+class ProjectCreate(BaseModel):
+    id: Optional[str] = Field(None, description="Optional UUID for the project. Auto-generated if not provided.")
+    name: str = Field(..., description="Unique name of the project.")
+    description: Optional[str] = Field(None, description="Brief description of the project.")
+    
+    per_user_quota: Optional[int] = Field(180, ge=0, description="Maximum tasks a single agent can complete.")
+    reuse_count: Optional[int] = Field(0, ge=0, description="Number of times tasks/prompts can be reused.")
+    
+    agent_coin: Optional[int] = Field(0, ge=0, description="Coins awarded to agents per completed task.")
+    reviewer_coin: Optional[int] = Field(0, ge=0, description="Coins awarded to reviewers per reviewed submission.")
+    super_reviewer_coin: Optional[int] = Field(0, ge=0, description="Coins awarded to super reviewers per review.")
+    
+    agent_amount: Optional[float] = Field(0.0, ge=0.0, description="Monetary reward for agents.")
+    reviewer_amount: Optional[float] = Field(0.0, ge=0.0, description="Monetary reward for reviewers.")
+    super_reviewer_amount: Optional[float] = Field(0.0, ge=0.0, description="Monetary reward for super reviewers.")
+    
+    is_public: Optional[bool] = Field(True, description="Whether the project is visible to all agents.")
+    
+    review_parameters: Optional[List[str]] = Field(default_factory=list, description="List of parameters to score submissions (e.g., ['accuracy', 'clarity']).")
+    review_scale: Optional[int] = Field(5, ge=1, description="Maximum score for each review parameter.")
+    review_threshold_percent: conint(ge=0, le=100) = Field(50, description="Minimum percent of total score required for approval.")
+    
+    total_prompts: Optional[int] = Field(0, ge=0, description="Total number of prompts in the project.")
+    total_tasks: Optional[int] = Field(0, ge=0, description="Total number of tasks allocated in the project.")
+    total_submissions: Optional[int] = Field(0, ge=0, description="Total number of submissions received for the project.")
+    
+    class Config:
+        from_attributes = True  # Enables compatibility with SQLAlchemy models
+
+
+class ReviewScores(BaseModel):
+    comments: Optional[str] = None
+
+    class Config:
+        extra='allow' 
+
+class ProjectUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    is_public: Optional[bool] = None
+    agent_coin: Optional[float] = None
+    reviewer_coin: Optional[float] = None
+
+class GetProjectInfo(BaseModel):
+    id: Optional[str] = None
+    name: Optional[str] = None
+
+class AllocationOut(BaseModel):
+    assignment_id: str   # <-- alias for allocation.id
+    project_id: str
+    task_id: Optional[str] = None
+    user_id: str
+    user_email: str
+    status: str
+    assigned_at: datetime
+
+    class Config:
+        from_attributes = True
+        populate_by_name = True
+
+class AllocationResponse(BaseModel):
+    allocated_count: int
+    allocations: List[str]
+
+class TaskWithUser(BaseModel):
+    task_id: str
+    assignment_id: str
+    prompt_id: str
+    sentence_id: Optional[str]
+    sentence_text: Optional[str]
+    user_id: Optional[str]
+    user_email: Optional[str]
+    assigned_at: Optional[datetime] = None
+    status: str
+
+class ProjectTasksResponse(BaseModel):
+    project_id: str
+    project_name: str
+    tasks: List[TaskWithUser]
+
+
+class PromptInfo(BaseModel):
+    prompt_id: Optional[str]
+    sentence_id: Optional[str]  # same as prompt_id
+    sentence_text: Optional[str]
+    media_url: Optional[str]
+    category: Optional[str]
+    domain: Optional[str]
+    max_reuses: Optional[int]
+    current_reuses: Optional[int]
+
+class SubmissionInfo(BaseModel):
+    submission_id: str
+    user_id: Optional[str]
+    user_email: Optional[str]
+    type: Optional[TaskType]
+    payload_text: Optional[str]
+    file_url: Optional[str]
+    status: Optional[str]
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
+
+
+# class ReviewInfo(BaseModel):
+#     review_scores: Optional[Dict]
+#     review_total_score: Optional[float]
+#     review_decision: Optional[str]
+#     review_comments: Optional[str]
+#     total_coins_earned: Optional[float]
+
+
+class ReviewerInfo(BaseModel):
+    reviewer_id: str
+    reviewer_email: Optional[str]
+    review_scores: Optional[Dict] = None
+    review_total_score: Optional[float] = None
+    review_decision: Optional[str] = None
+    review_comments: Optional[str] = None
+    total_coins_earned: Optional[float] = 0
+
+class ReviewInfo(BaseModel):
+    reviewers: List[ReviewerInfo] = []
+
+class TaskWithDetails(BaseModel):
+    task_id: str
+    assignment_id: Optional[str]
+    assigned_at: Optional[datetime] = None
+    status: Optional[str] = None
+    prompt: Optional[PromptInfo] = None
+    submission: Optional[SubmissionInfo] = None
+    review: Optional[ReviewInfo] = None
+
+
+class ProjectTasksResponseRich(BaseModel):
+    project_id: str
+    project_name: str
+    tasks: list[TaskWithDetails]
