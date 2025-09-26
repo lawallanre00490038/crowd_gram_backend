@@ -1,5 +1,5 @@
 from typing import Optional, List
-from src.schemas.project_schemas import TaskWithDetails, PromptInfo, SubmissionInfo, ReviewInfo, ReviewerInfo
+from src.schemas.project_schemas import TaskWithDetails, PromptInfo, SubmissionInfo, ReviewInfo, ReviewerInfo, TaskWithDetailsReview
 from src.db.models import Task, ProjectAllocation, Submission, ReviewerAllocation, Review, CoinPayment
 
 
@@ -15,7 +15,8 @@ async def build_task_details(
     rev_alloc: Optional[ReviewerAllocation] = None,
     review: Optional[Review] = None,
     payment: Optional[CoinPayment] = None,
-    user_email: Optional[str] = None
+    user_email: Optional[str] = None,
+    is_reviewer: bool = False
 ) -> TaskWithDetails:
 
     # Prompt details
@@ -64,15 +65,28 @@ async def build_task_details(
 
     review_info = ReviewInfo(reviewers=reviewers_info) if reviewers_info else None
 
-    return TaskWithDetails(
-        task_id=task.id,
-        assignment_id=alloc.id if alloc else (rev_alloc.id if rev_alloc else None),
-        assigned_at=alloc.assigned_at if alloc else (rev_alloc.assigned_at if rev_alloc else None),
-        status=alloc.status.value if alloc else (rev_alloc.status.value if rev_alloc else None),
-        prompt=prompt_info,
-        submission=submission_info,
-        review=review_info
-    )
+    if is_reviewer:
+
+        return TaskWithDetailsReview(
+            task_id=task.id,
+            assignment_id=alloc.id if alloc else (rev_alloc.id if rev_alloc else None),
+            assigned_at=alloc.assigned_at if alloc else (rev_alloc.assigned_at if rev_alloc else None),
+            status=alloc.status.value if alloc else (rev_alloc.status.value if rev_alloc else None),
+            prompt=prompt_info,
+            submission=submission_info
+        )
+    else:
+
+        return TaskWithDetails(
+            task_id=task.id,
+            assignment_id=alloc.id if alloc else (rev_alloc.id if rev_alloc else None),
+            assigned_at=alloc.assigned_at if alloc else (rev_alloc.assigned_at if rev_alloc else None),
+            status=alloc.status.value if alloc else (rev_alloc.status.value if rev_alloc else None),
+            prompt=prompt_info,
+            submission=submission_info,
+            review=review_info,
+            user_email=user_email
+        )
 
 
 

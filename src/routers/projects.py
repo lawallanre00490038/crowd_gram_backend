@@ -7,17 +7,18 @@ from sqlalchemy.orm import selectinload
 
 from src.db.database import get_session
 from src.utils.build_task_details import build_task_details
-from src.db.models import Project, ProjectAllocation, Task, Submission, ReviewerAllocation, CoinPayment, Status
+from src.db.models import Project, ProjectAllocation, Task, Submission, ReviewerAllocation, CoinPayment, User
 from src.schemas.project_schemas import (
     ProjectCreate,
     ProjectUpdate,
-    AllocationOut,
     ReviewerInfo,
     GetProjectInfo,
     ReviewInfo,
     ProjectTasksResponse,
     TaskWithUser,
-    ProjectTasksResponseRich
+    ProjectTasksResponseRich,
+    ProjectReviewerTasksResponse,
+    ReviewerWithTasks,
 )
 
 router = APIRouter()
@@ -325,7 +326,9 @@ async def list_project_tasks_assigned_to_agents(
 # -------------------------
 # Reviewer Tasks Endpoint
 # -------------------------
-@router.get("/{project_id}/tasks/reviewer/detailed", response_model=ProjectTasksResponseRich)
+from collections import defaultdict
+
+@router.get("/{project_id}/tasks/reviewer/detailed", response_model=ProjectReviewerTasksResponse)
 async def list_project_tasks_assigned_to_reviewers(
     project_id: str,
     status: Optional[str] = None,
@@ -334,43 +337,52 @@ async def list_project_tasks_assigned_to_reviewers(
     prompt_id: Optional[str] = None,
     session: AsyncSession = Depends(get_session)
 ):
-    # Fetch project with all necessary relationships eagerly loaded
-    result = await session.execute(
+    # --- Same query setup as before ---
+    query = (
         select(Project)
         .options(
-            selectinload(Project.tasks)
-            .selectinload(Task.prompt),
-            selectinload(Project.tasks)
-            .selectinload(Task.submissions)
-            .selectinload(Submission.user),
-            selectinload(Project.tasks)
-            .selectinload(Task.submissions)
-            .selectinload(Submission.assignment),
-            selectinload(Project.tasks)
-            .selectinload(Task.submissions)
-            .selectinload(Submission.review_allocations)
-            .selectinload(ReviewerAllocation.reviewer),
-            selectinload(Project.tasks)
-            .selectinload(Task.submissions)
-            .selectinload(Submission.reviews),
+            selectinload(Project.tasks).selectinload(Task.prompt),
+            selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.user),
+            selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.assignment),
+            selectinload(Project.tasks).selectinload(Task.submissions)
+                .selectinload(Submission.review_allocations)
+                .selectinload(ReviewerAllocation.reviewer),
+            selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.reviews),
         )
         .where(Project.id == project_id)
     )
+
+    if reviewer_email or reviewer_id:
+        query = (
+            query.join(Project.tasks)
+                 .join(Task.submissions)
+                 .join(Submission.review_allocations)
+                 .join(ReviewerAllocation.reviewer)
+        )
+        if reviewer_email:
+            query = query.where(User.email.ilike(reviewer_email))
+        if reviewer_id:
+            query = query.where(ReviewerAllocation.reviewer_id == reviewer_id)
+
+    result = await session.execute(query)
     project = result.scalars().first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
-    # Pre-fetch all payments for tasks in this project
+    # --- Prefetch payments ---
     task_ids = [t.id for t in project.tasks]
     payment_result = await session.execute(
-        select(CoinPayment)
-        .where(CoinPayment.project_id == project.id, CoinPayment.task_id.in_(task_ids))
+        select(CoinPayment).where(
+            CoinPayment.project_id == project.id,
+            CoinPayment.task_id.in_(task_ids)
+        )
     )
     all_payments = payment_result.scalars().all()
     payment_lookup = {(p.user_id, p.task_id): p for p in all_payments}
 
-    # Build tasks
-    tasks_out = []
+    # --- Group tasks by reviewer ---
+    reviewers_map = defaultdict(lambda: {"reviewer_email": None, "tasks": []})
+
     for task in project.tasks:
         if prompt_id and task.prompt_id != prompt_id:
             continue
@@ -381,29 +393,40 @@ async def list_project_tasks_assigned_to_reviewers(
             )
 
             for rev_alloc in submission.review_allocations:
-                # Filters
-                if status and rev_alloc.status.value != status:
-                    continue
-                reviewer_email_value = rev_alloc.reviewer.email if rev_alloc.reviewer else None
-                if reviewer_email and reviewer_email_value != reviewer_email:
-                    continue
-                if reviewer_id and rev_alloc.reviewer_id != reviewer_id:
+                if status and rev_alloc.status.value.lower() != status.lower():
                     continue
 
                 review = next((r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id), None)
                 payment = payment_lookup.get((rev_alloc.reviewer_id, task.id))
 
-                tasks_out.append(await build_task_details(
-                    task,
+
+                # Build task details
+                task_details = await build_task_details(
+                    is_reviewer=True,
+                    task=task,
                     rev_alloc=rev_alloc,
                     submission=submission,
                     review=review,
                     payment=payment,
                     user_email=user_email_value
-                ))
+                )
 
-    return ProjectTasksResponseRich(
+                # Insert into reviewer grouping
+                reviewers_map[rev_alloc.reviewer_id]["reviewer_email"] = rev_alloc.reviewer.email
+                reviewers_map[rev_alloc.reviewer_id]["tasks"].append(task_details)
+
+    # --- Transform into response ---
+    reviewers_out = [
+        ReviewerWithTasks(
+            reviewer_id=rid,
+            reviewer_email=data["reviewer_email"],
+            tasks=data["tasks"]
+        )
+        for rid, data in reviewers_map.items()
+    ]
+
+    return ProjectReviewerTasksResponse(
         project_id=project.id,
         project_name=project.name,
-        tasks=tasks_out
+        reviewers=reviewers_out
     )

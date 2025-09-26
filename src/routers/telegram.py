@@ -1,9 +1,10 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from src.db.models import User, CoinPayment, Role, ProjectAllocation, Submission, Review, Status
 from src.db.database import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.utils.auth import get_password_hash
+from src.utils.auth import get_password_hash, verify_password
 from src.schemas.user_schemas import UserRegisterRequest, UserResponse, UserStatusResponse
 from sqlalchemy import func
 
@@ -50,13 +51,16 @@ async def register_telegram_user(payload: UserRegisterRequest, session: AsyncSes
 
 
 @router.get("/login")
-async def login_telegram_user(email: str, session: AsyncSession = Depends(get_session)):
+async def login_telegram_user(email: str, password: Optional[str] = None, session: AsyncSession = Depends(get_session)):
     """Login a user with email (telegram_id is optional)."""
     user_result = await session.execute(select(User).where(User.email == email))
     user = user_result.scalars().first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found. Please register.")
-    return {"message": "Login successful.", "user_id": user.id, "telegram_id": user.telegram_id}
+    if password and not verify_password(password, user.password):
+        raise HTTPException(status_code=401, detail="Incorrect password.")
+    return {
+        "message": "Login successful.", "user_id": user.id, "telegram_id": user.telegram_id}
 
 
 

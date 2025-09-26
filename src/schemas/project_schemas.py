@@ -111,15 +111,6 @@ class SubmissionInfo(BaseModel):
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
 
-
-# class ReviewInfo(BaseModel):
-#     review_scores: Optional[Dict]
-#     review_total_score: Optional[float]
-#     review_decision: Optional[str]
-#     review_comments: Optional[str]
-#     total_coins_earned: Optional[float]
-
-
 class ReviewerInfo(BaseModel):
     reviewer_id: str
     reviewer_email: Optional[str]
@@ -140,9 +131,53 @@ class TaskWithDetails(BaseModel):
     prompt: Optional[PromptInfo] = None
     submission: Optional[SubmissionInfo] = None
     review: Optional[ReviewInfo] = None
+    user_email: Optional[str] = None
 
 
 class ProjectTasksResponseRich(BaseModel):
     project_id: str
     project_name: str
     tasks: list[TaskWithDetails]
+
+
+
+
+
+class ReviewDetail(BaseModel):
+    review_scores: Optional[Dict[str, int]]
+    review_total_score: Optional[int]
+    review_decision: Optional[str]
+    review_comments: Optional[str]
+    total_coins_earned: int
+
+class ReviewerTaskResponse(BaseModel):
+    task_id: str
+    assignment_id: str
+    assigned_at: str
+    status: str
+    prompt: dict 
+    submission: dict
+    review: Optional[ReviewDetail]
+
+
+
+
+
+
+class TaskWithDetailsReview(BaseModel):
+    task_id: str
+    assignment_id: Optional[str]
+    assigned_at: Optional[datetime] = None
+    status: Optional[str] = None
+    prompt: Optional[PromptInfo] = None
+    submission: Optional[SubmissionInfo] = None
+
+class ReviewerWithTasks(BaseModel):
+    reviewer_id: str
+    reviewer_email: str
+    tasks: List[TaskWithDetailsReview]
+
+class ProjectReviewerTasksResponse(BaseModel):
+    project_id: str
+    project_name: str
+    reviewers: List[ReviewerWithTasks]

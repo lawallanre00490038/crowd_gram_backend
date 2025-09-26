@@ -11,8 +11,6 @@ from src.routers import users, submissions, status, telegram, projects, reviewer
 load_dotenv()
 
 
-
-
 version = "v1"
 
 description = """
