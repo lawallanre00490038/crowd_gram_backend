@@ -7,7 +7,7 @@ from sqlalchemy.orm import selectinload
 
 from src.db.database import get_session
 from src.utils.build_task_details import build_task_details
-from src.db.models import Project, ProjectAllocation, Task, Submission, ReviewerAllocation, CoinPayment, User
+from src.db.models import Project, ProjectAllocation, Task, Submission, ReviewerAllocation, CoinPayment, User, Role
 from src.schemas.project_schemas import (
     ProjectCreate,
     ProjectUpdate,
@@ -226,53 +226,55 @@ async def list_project_tasks_assigned_to_reviewers(
 
 
 
-@router.get("/projects/by-agent-email/{email}", response_model=List[Project])
-async def get_projects_by_agent_email(
+@router.get("/projects/by-email/{email}", response_model=List[Project])
+async def get_projects_by_email(
     email: str,
     session: AsyncSession = Depends(get_session)
 ):
     """
-    List all projects where an agent (user) with the given email has allocations.
+    List all projects where a user (agent or reviewer) with the given email is involved.
+    Role is determined from the User record.
     """
-    result = await session.execute(
-        select(Project)
-        .join(Project.tasks)
-        .join(Task.allocations)
-        .join(ProjectAllocation.user)
-        .where(User.email == email)
-        .options(selectinload(Project.tasks))
-    )
-    projects = result.scalars().unique().all()
+    # 1. Find user
+    user_result = await session.execute(select(User).where(User.email == email))
+    user = user_result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    projects = []
+    
+    # 2. Fetch projects based on role
+    if user.role == Role.agent:
+        result = await session.execute(
+            select(Project)
+            .join(Project.tasks)
+            .join(Task.allocations)
+            .join(ProjectAllocation.user)
+            .where(User.email == email)
+            .options(selectinload(Project.tasks))
+        )
+        projects = result.scalars().unique().all()
+
+    elif user.role == Role.reviewer:
+        result = await session.execute(
+            select(Project)
+            .join(Project.tasks)
+            .join(Task.submissions)
+            .join(Submission.review_allocations)
+            .join(ReviewerAllocation.reviewer)
+            .where(User.email == email)
+            .options(selectinload(Project.tasks))
+        )
+        projects = result.scalars().unique().all()
+
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported role for this query")
 
     if not projects:
-        raise HTTPException(status_code=404, detail="No projects found for this agent email")
+        raise HTTPException(status_code=404, detail=f"No projects found for {user.role} with this email")
 
     return projects
 
-
-@router.get("/projects/by-reviewer-email/{email}", response_model=List[Project])
-async def get_projects_by_reviewer_email(
-    email: str,
-    session: AsyncSession = Depends(get_session)
-):
-    """
-    List all projects where a reviewer with the given email has review allocations.
-    """
-    result = await session.execute(
-        select(Project)
-        .join(Project.tasks)
-        .join(Task.submissions)
-        .join(Submission.review_allocations)
-        .join(ReviewerAllocation.reviewer)
-        .where(User.email == email)
-        .options(selectinload(Project.tasks))
-    )
-    projects = result.scalars().unique().all()
-
-    if not projects:
-        raise HTTPException(status_code=404, detail="No projects found for this reviewer email")
-
-    return projects
 
 
 
