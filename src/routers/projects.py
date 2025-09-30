@@ -82,8 +82,6 @@ async def update_project(project_id: str, project_in: ProjectUpdate, session: As
 
 
 
-
-
 @router.get("/{project_id}/tasks/agent", response_model=ProjectTasksResponse)
 async def list_project_tasks_assigned_to_agents(
     project_id: str,
@@ -141,8 +139,6 @@ async def list_project_tasks_assigned_to_agents(
         project_name=project.name,
         tasks=task_list
     )
-
-
 
 
 
@@ -230,6 +226,57 @@ async def list_project_tasks_assigned_to_reviewers(
 
 
 
+@router.get("/projects/by-agent-email/{email}", response_model=List[Project])
+async def get_projects_by_agent_email(
+    email: str,
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    List all projects where an agent (user) with the given email has allocations.
+    """
+    result = await session.execute(
+        select(Project)
+        .join(Project.tasks)
+        .join(Task.allocations)
+        .join(ProjectAllocation.user)
+        .where(User.email == email)
+        .options(selectinload(Project.tasks))
+    )
+    projects = result.scalars().unique().all()
+
+    if not projects:
+        raise HTTPException(status_code=404, detail="No projects found for this agent email")
+
+    return projects
+
+
+@router.get("/projects/by-reviewer-email/{email}", response_model=List[Project])
+async def get_projects_by_reviewer_email(
+    email: str,
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    List all projects where a reviewer with the given email has review allocations.
+    """
+    result = await session.execute(
+        select(Project)
+        .join(Project.tasks)
+        .join(Task.submissions)
+        .join(Submission.review_allocations)
+        .join(ReviewerAllocation.reviewer)
+        .where(User.email == email)
+        .options(selectinload(Project.tasks))
+    )
+    projects = result.scalars().unique().all()
+
+    if not projects:
+        raise HTTPException(status_code=404, detail="No projects found for this reviewer email")
+
+    return projects
+
+
+
+
 
 @router.get("/{project_id}/tasks/agent/detailed", response_model=ProjectTasksResponseRich)
 async def list_project_tasks_assigned_to_agents(
@@ -240,7 +287,6 @@ async def list_project_tasks_assigned_to_agents(
     prompt_id: Optional[str] = None,
     session: AsyncSession = Depends(get_session)
 ):
-    # ✅ Fetch project with all necessary relationships eagerly loaded
     result = await session.execute(
         select(Project)
         .options(

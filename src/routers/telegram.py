@@ -50,6 +50,7 @@ async def register_telegram_user(payload: UserRegisterRequest, session: AsyncSes
 
 
 
+
 @router.get("/login")
 async def login_telegram_user(email: str, password: Optional[str] = None, session: AsyncSession = Depends(get_session)):
     """Login a user with email (telegram_id is optional)."""
@@ -60,7 +61,22 @@ async def login_telegram_user(email: str, password: Optional[str] = None, sessio
     if password and not verify_password(password, user.password):
         raise HTTPException(status_code=401, detail="Incorrect password.")
     return {
-        "message": "Login successful.", "user_id": user.id, "telegram_id": user.telegram_id}
+        "message": "Login successful.", 
+        "user_id": user.id, "telegram_id": user.telegram_id,
+        "user_role": user.role, "user_languages": user.languages,
+        "user_dialects": user.dialects
+    }
+
+
+# /me endpoint using email (telegram optional)
+@router.get("/me", response_model=UserResponse)
+async def get_telegram_user(email: str, session: AsyncSession = Depends(get_session)):
+    """Fetch user's info by email (telegram optional)."""
+    user_result = await session.execute(select(User).where(User.email == email))
+    user = user_result.scalars().first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found. Please register.")
+    return user
 
 
 
