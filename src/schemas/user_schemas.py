@@ -1,4 +1,6 @@
+from email import message
 from typing import List, Optional
+from pandas.core.computation.ops import Op
 from pydantic import BaseModel, EmailStr
 from enum import Enum
 
@@ -22,9 +24,10 @@ class UserRegisterRequest(BaseModel):
 
 # Response schema for user basic info
 class UserResponse(BaseModel):
+    message: Optional[str] = None
     id: str
-    name: str
-    email: EmailStr
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
     telegram_id: Optional[str] = None
     role: RoleEnum
     languages: Optional[List[str]] = None

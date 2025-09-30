@@ -1,3 +1,4 @@
+from email import message
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
@@ -7,6 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.utils.auth import get_password_hash, verify_password
 from src.schemas.user_schemas import UserRegisterRequest, UserResponse, UserStatusResponse
 from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
+
 
 router = APIRouter()
 
@@ -24,7 +27,7 @@ async def register_telegram_user(payload: UserRegisterRequest, session: AsyncSes
                 status_code=400,
                 detail="This email is already linked to another Telegram ID."
             )
-
+    
         user.telegram_id = payload.telegram_id or user.telegram_id
         user.languages = payload.languages or user.languages
         user.dialects = payload.dialects or user.dialects
@@ -33,39 +36,63 @@ async def register_telegram_user(payload: UserRegisterRequest, session: AsyncSes
         await session.commit()
         await session.refresh(user)
         return user
+        
 
     user = User(
         name=payload.name,
         email=payload.email,
-        password=get_password_hash(payload.password),
+        password=payload.password,
         role=payload.role,
         telegram_id=payload.telegram_id,
         languages=payload.languages,
         dialects=payload.dialects
     )
+
+    print(f"Before commit: {user}")
+
+    if user.password:  # only hash if provided
+        user.password = get_password_hash(user.password)
     session.add(user)
     await session.commit()
     await session.refresh(user)
-    return user
+
+    print(f"After commit: {user}")
+    return user    
 
 
-
-
-@router.get("/login")
-async def login_telegram_user(email: str, password: Optional[str] = None, session: AsyncSession = Depends(get_session)):
+@router.get("/login", response_model=UserResponse)
+async def login_telegram_user(
+    email: str, 
+    password: Optional[str] = None, 
+    session: AsyncSession = Depends(get_session)
+):
     """Login a user with email (telegram_id is optional)."""
-    user_result = await session.execute(select(User).where(User.email == email))
-    user = user_result.scalars().first()
+    try:
+        user_result = await session.execute(select(User).where(User.email == email))
+        user = user_result.scalars().first()
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found. Please register.")
-    if password and not verify_password(password, user.password):
-        raise HTTPException(status_code=401, detail="Incorrect password.")
+
+    if password:
+        if not user.password:  # user was created without a password
+            raise HTTPException(status_code=400, detail="This account does not have a password set.")
+        if not verify_password(password, user.password):
+            raise HTTPException(status_code=401, detail="Incorrect password.")
+
     return {
         "message": "Login successful.", 
-        "user_id": user.id, "telegram_id": user.telegram_id,
-        "user_role": user.role, "user_languages": user.languages,
-        "user_dialects": user.dialects
+        "id": user.id,
+        "email": user.email,
+        "name": user.name,
+        "telegram_id": user.telegram_id,
+        "role": user.role,
+        "languages": user.languages,
+        "dialects": user.dialects
     }
+
 
 
 # /me endpoint using email (telegram optional)

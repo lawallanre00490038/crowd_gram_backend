@@ -54,7 +54,10 @@ async def process_excel_users(session: AsyncSession, file: UploadFile):
         dialects_str = str(row.get("dialect", "")).strip()
         dialects_list = [d.strip() for d in dialects_str.split(",") if d.strip()] if dialects_str else []
 
-        password = str(row.get("password", ""))
+        # Password
+        raw_password = row.get("password")
+        print(f"Raw password: {raw_password}")
+        password = str(raw_password).strip() if raw_password and pd.notna(raw_password) else None
         hashed_password = get_password_hash(password) if password else None
         
 
