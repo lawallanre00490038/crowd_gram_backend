@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import  select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-
+from fastapi import Path
 
 from src.db.database import get_session
 from src.utils.build_task_details import build_task_details
@@ -63,6 +63,26 @@ async def get_project(project_info: GetProjectInfo, session: AsyncSession = Depe
     return project
 
 
+
+@router.get("/project/{project_id}/review-parameters", response_model=List[str])
+async def get_review_parameters(
+    project_id: str = Path(..., description="The ID of the project"),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Get the review parameters of a project using its ID.
+    """
+    result = await session.execute(
+        select(Project.review_parameters).where(Project.id == project_id)
+    )
+    review_params = result.scalars().first()
+
+    if review_params is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    return review_params
+
+
 @router.patch("/update/project/{project_id}", response_model=Project)
 async def update_project(project_id: str, project_in: ProjectUpdate, session: AsyncSession = Depends(get_session)):
     """Update a project (partial update)."""
@@ -78,6 +98,7 @@ async def update_project(project_id: str, project_in: ProjectUpdate, session: As
     await session.commit()
     await session.refresh(proj)
     return proj
+
 
 
 
