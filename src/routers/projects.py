@@ -103,146 +103,146 @@ async def update_project(project_id: str, project_in: ProjectUpdate, session: As
 
 
 
-@router.get("/{project_id}/tasks/agent", response_model=ProjectTasksResponse)
-async def list_project_tasks_assigned_to_agents(
-    project_id: str,
-    status: Optional[str] = Query(None, description="Filter by allocation status"),
-    user_email: Optional[str] = Query(None, description="Filter by user email"),
-    user_id: Optional[str] = Query(None, description="Filter by user ID"),
-    prompt_id: Optional[str] = Query(None, description="Filter by sentence ID"),
-    session: AsyncSession = Depends(get_session)
-):
-    """List tasks in a project along with their allocations.
-    Allows filtering by allocation status, user email/ID, and prompt ID.
-    """
-    result = await session.execute(
-        select(Project)
-        .options(
-            selectinload(Project.tasks)
-            .selectinload(Task.prompt),
-            selectinload(Project.tasks)
-            .selectinload(Task.allocations)
-            .selectinload(ProjectAllocation.user)
-        )
-        .where(Project.id == project_id)
-    )
-    project = result.scalars().first()
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+# @router.get("/{project_id}/tasks/agent", response_model=ProjectTasksResponse)
+# async def list_project_tasks_assigned_to_agents(
+#     project_id: str,
+#     status: Optional[str] = Query(None, description="Filter by allocation status"),
+#     user_email: Optional[str] = Query(None, description="Filter by user email"),
+#     user_id: Optional[str] = Query(None, description="Filter by user ID"),
+#     prompt_id: Optional[str] = Query(None, description="Filter by sentence ID"),
+#     session: AsyncSession = Depends(get_session)
+# ):
+#     """List tasks in a project along with their allocations.
+#     Allows filtering by allocation status, user email/ID, and prompt ID.
+#     """
+#     result = await session.execute(
+#         select(Project)
+#         .options(
+#             selectinload(Project.tasks)
+#             .selectinload(Task.prompt),
+#             selectinload(Project.tasks)
+#             .selectinload(Task.allocations)
+#             .selectinload(ProjectAllocation.user)
+#         )
+#         .where(Project.id == project_id)
+#     )
+#     project = result.scalars().first()
+#     if not project:
+#         raise HTTPException(status_code=404, detail="Project not found")
 
-    task_list = []
-    for task in project.tasks:
-        for alloc in task.allocations:
-            # Apply filters
-            if status and alloc.status.value != status:
-                continue
-            if user_email and (alloc.user.email if alloc.user else alloc.user_email) != user_email:
-                continue
-            if user_id and alloc.user_id != user_id:
-                continue
-            if prompt_id and task.prompt_id != prompt_id:
-                continue
+#     task_list = []
+#     for task in project.tasks:
+#         for alloc in task.allocations:
+#             # Apply filters
+#             if status and alloc.status.value != status:
+#                 continue
+#             if user_email and (alloc.user.email if alloc.user else alloc.user_email) != user_email:
+#                 continue
+#             if user_id and alloc.user_id != user_id:
+#                 continue
+#             if prompt_id and task.prompt_id != prompt_id:
+#                 continue
 
-            task_list.append(TaskWithUser(
-                task_id=task.id,
-                assignment_id=alloc.id,
-                prompt_id=task.prompt_id,
-                sentence_id=task.prompt.id if task.prompt else None,
-                sentence_text=task.prompt.text if task.prompt else None,
-                user_id=alloc.user_id,
-                user_email=alloc.user.email if alloc.user else alloc.user_email,
-                assigned_at=alloc.assigned_at,
-                status=alloc.status.value
-            ))
+#             task_list.append(TaskWithUser(
+#                 task_id=task.id,
+#                 assignment_id=alloc.id,
+#                 prompt_id=task.prompt_id,
+#                 sentence_id=task.prompt.id if task.prompt else None,
+#                 sentence_text=task.prompt.text if task.prompt else None,
+#                 user_id=alloc.user_id,
+#                 user_email=alloc.user.email if alloc.user else alloc.user_email,
+#                 assigned_at=alloc.assigned_at,
+#                 status=alloc.status.value
+#             ))
 
-    return ProjectTasksResponse(
-        project_id=project.id,
-        project_name=project.name,
-        tasks=task_list
-    )
+#     return ProjectTasksResponse(
+#         project_id=project.id,
+#         project_name=project.name,
+#         tasks=task_list
+#     )
 
 
 
-@router.get("/{project_id}/tasks/reviewer", response_model=ProjectTasksResponse)
-async def list_project_tasks_assigned_to_reviewers(
-    project_id: str,
-    status: Optional[str] = Query(None),
-    reviewer_email: Optional[str] = Query(None),
-    reviewer_id: Optional[str] = Query(None),
-    prompt_id: Optional[str] = Query(None),
-    session: AsyncSession = Depends(get_session)
-):
-    """List tasks in a project along with their reviewer allocations and reviews.
-    Allows filtering by allocation status, reviewer email/ID, and prompt ID.
-    """
-    result = await session.execute(
-        select(Project)
-        .options(
-            selectinload(Project.tasks)
-            .selectinload(Task.submissions)
-            .selectinload(Submission.review_allocations)
-            .selectinload(ReviewerAllocation.reviewer),
-            selectinload(Project.tasks)
-            .selectinload(Task.prompt),
-            selectinload(Project.tasks)
-            .selectinload(Task.submissions)
-            .selectinload(Submission.reviews)
-        )
-        .where(Project.id == project_id)
-    )
-    project = result.scalars().first()
-    if not project:
-        raise HTTPException(status_code=404, detail="Project not found")
+# @router.get("/{project_id}/tasks/reviewer", response_model=ProjectTasksResponse)
+# async def list_project_tasks_assigned_to_reviewers(
+#     project_id: str,
+#     status: Optional[str] = Query(None),
+#     reviewer_email: Optional[str] = Query(None),
+#     reviewer_id: Optional[str] = Query(None),
+#     prompt_id: Optional[str] = Query(None),
+#     session: AsyncSession = Depends(get_session)
+# ):
+#     """List tasks in a project along with their reviewer allocations and reviews.
+#     Allows filtering by allocation status, reviewer email/ID, and prompt ID.
+#     """
+#     result = await session.execute(
+#         select(Project)
+#         .options(
+#             selectinload(Project.tasks)
+#             .selectinload(Task.submissions)
+#             .selectinload(Submission.review_allocations)
+#             .selectinload(ReviewerAllocation.reviewer),
+#             selectinload(Project.tasks)
+#             .selectinload(Task.prompt),
+#             selectinload(Project.tasks)
+#             .selectinload(Task.submissions)
+#             .selectinload(Submission.reviews)
+#         )
+#         .where(Project.id == project_id)
+#     )
+#     project = result.scalars().first()
+#     if not project:
+#         raise HTTPException(status_code=404, detail="Project not found")
 
-    task_list = []
-    for task in project.tasks:
-        for submission in task.submissions:
-            for rev_alloc in submission.review_allocations:
-                if status and rev_alloc.status.value != status:
-                    continue
-                if reviewer_email and (rev_alloc.reviewer.email if rev_alloc.reviewer else None) != reviewer_email:
-                    continue
-                if reviewer_id and rev_alloc.reviewer_id != reviewer_id:
-                    continue
-                if prompt_id and task.prompt_id != prompt_id:
-                    continue
+#     task_list = []
+#     for task in project.tasks:
+#         for submission in task.submissions:
+#             for rev_alloc in submission.review_allocations:
+#                 if status and rev_alloc.status.value != status:
+#                     continue
+#                 if reviewer_email and (rev_alloc.reviewer.email if rev_alloc.reviewer else None) != reviewer_email:
+#                     continue
+#                 if reviewer_id and rev_alloc.reviewer_id != reviewer_id:
+#                     continue
+#                 if prompt_id and task.prompt_id != prompt_id:
+#                     continue
 
-                # Find review by this reviewer for this submission
-                review = next((r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id), None)
+#                 # Find review by this reviewer for this submission
+#                 review = next((r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id), None)
 
-                # Get coins/payment earned by reviewer for this submission (if any)
-                payment_result = await session.execute(
-                    select(CoinPayment)
-                    .where(
-                        CoinPayment.user_id == rev_alloc.reviewer_id,
-                        CoinPayment.project_id == project.id,
-                        CoinPayment.task_id == task.id
-                    )
-                )
-                payment = payment_result.scalars().first()
+#                 # Get coins/payment earned by reviewer for this submission (if any)
+#                 payment_result = await session.execute(
+#                     select(CoinPayment)
+#                     .where(
+#                         CoinPayment.user_id == rev_alloc.reviewer_id,
+#                         CoinPayment.project_id == project.id,
+#                         CoinPayment.task_id == task.id
+#                     )
+#                 )
+#                 payment = payment_result.scalars().first()
 
-                task_list.append(TaskWithUser(
-                    task_id=task.id,
-                    assignment_id=rev_alloc.id,
-                    prompt_id=task.prompt_id,
-                    sentence_id=task.prompt.id if task.prompt else None,
-                    sentence_text=task.prompt.text if task.prompt else None,
-                    user_id=rev_alloc.reviewer_id,
-                    user_email=rev_alloc.reviewer.email if rev_alloc.reviewer else None,
-                    assigned_at=rev_alloc.assigned_at,
-                    status=rev_alloc.status.value,
-                    review_scores=review.scores if review else None,
-                    review_total_score=review.total_score if review else None,
-                    review_decision=review.decision.value if review else None,
-                    review_comments=review.comments if review else None,
-                    total_coins_earned=payment.coins_earned if payment else 0
-                ))
+#                 task_list.append(TaskWithUser(
+#                     task_id=task.id,
+#                     assignment_id=rev_alloc.id,
+#                     prompt_id=task.prompt_id,
+#                     sentence_id=task.prompt.id if task.prompt else None,
+#                     sentence_text=task.prompt.text if task.prompt else None,
+#                     user_id=rev_alloc.reviewer_id,
+#                     user_email=rev_alloc.reviewer.email if rev_alloc.reviewer else None,
+#                     assigned_at=rev_alloc.assigned_at,
+#                     status=rev_alloc.status.value,
+#                     review_scores=review.scores if review else None,
+#                     review_total_score=review.total_score if review else None,
+#                     review_decision=review.decision.value if review else None,
+#                     review_comments=review.comments if review else None,
+#                     total_coins_earned=payment.coins_earned if payment else 0
+#                 ))
 
-    return ProjectTasksResponse(
-        project_id=project.id,
-        project_name=project.name,
-        tasks=task_list
-    )
+#     return ProjectTasksResponse(
+#         project_id=project.id,
+#         project_name=project.name,
+#         tasks=task_list
+#     )
 
 
 
