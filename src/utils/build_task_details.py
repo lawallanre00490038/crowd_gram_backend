@@ -19,6 +19,14 @@ async def build_task_details(
     is_reviewer: bool = False
 ) -> TaskWithDetails:
 
+    # Contributor submission
+    submission_info = None
+    if submission:
+        # ✅ fallback: if payload_text is empty, use prompt sentence
+        payload_text = submission.payload_text
+        if (not payload_text or payload_text.strip() == "") and task.prompt:
+            payload_text = task.prompt.text
+
     # Prompt details
     prompt_info = PromptInfo(
         prompt_id=task.prompt.id if task.prompt else None,
@@ -37,7 +45,7 @@ async def build_task_details(
         user_id=submission.user_id,
         user_email=user_email,
         type=submission.type,
-        payload_text=submission.payload_text,
+        payload_text=payload_text,
         file_url=submission.file_url,
         status=submission.status.value,
         created_at=submission.created_at,

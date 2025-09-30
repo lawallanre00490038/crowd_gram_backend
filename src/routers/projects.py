@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import  select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from fastapi import Path
+from collections import defaultdict
 
 from src.db.database import get_session
 from src.utils.build_task_details import build_task_details
@@ -14,12 +15,11 @@ from src.schemas.project_schemas import (
     ReviewerInfo,
     GetProjectInfo,
     ReviewInfo,
-    ProjectTasksResponse,
-    TaskWithUser,
     ProjectTasksResponseRich,
     ProjectReviewerTasksResponse,
     ReviewerWithTasks,
 )
+from src.schemas.project_general import ProjectTasksGeneralResponse
 
 router = APIRouter()
 
@@ -101,152 +101,6 @@ async def update_project(project_id: str, project_in: ProjectUpdate, session: As
 
 
 
-
-
-# @router.get("/{project_id}/tasks/agent", response_model=ProjectTasksResponse)
-# async def list_project_tasks_assigned_to_agents(
-#     project_id: str,
-#     status: Optional[str] = Query(None, description="Filter by allocation status"),
-#     user_email: Optional[str] = Query(None, description="Filter by user email"),
-#     user_id: Optional[str] = Query(None, description="Filter by user ID"),
-#     prompt_id: Optional[str] = Query(None, description="Filter by sentence ID"),
-#     session: AsyncSession = Depends(get_session)
-# ):
-#     """List tasks in a project along with their allocations.
-#     Allows filtering by allocation status, user email/ID, and prompt ID.
-#     """
-#     result = await session.execute(
-#         select(Project)
-#         .options(
-#             selectinload(Project.tasks)
-#             .selectinload(Task.prompt),
-#             selectinload(Project.tasks)
-#             .selectinload(Task.allocations)
-#             .selectinload(ProjectAllocation.user)
-#         )
-#         .where(Project.id == project_id)
-#     )
-#     project = result.scalars().first()
-#     if not project:
-#         raise HTTPException(status_code=404, detail="Project not found")
-
-#     task_list = []
-#     for task in project.tasks:
-#         for alloc in task.allocations:
-#             # Apply filters
-#             if status and alloc.status.value != status:
-#                 continue
-#             if user_email and (alloc.user.email if alloc.user else alloc.user_email) != user_email:
-#                 continue
-#             if user_id and alloc.user_id != user_id:
-#                 continue
-#             if prompt_id and task.prompt_id != prompt_id:
-#                 continue
-
-#             task_list.append(TaskWithUser(
-#                 task_id=task.id,
-#                 assignment_id=alloc.id,
-#                 prompt_id=task.prompt_id,
-#                 sentence_id=task.prompt.id if task.prompt else None,
-#                 sentence_text=task.prompt.text if task.prompt else None,
-#                 user_id=alloc.user_id,
-#                 user_email=alloc.user.email if alloc.user else alloc.user_email,
-#                 assigned_at=alloc.assigned_at,
-#                 status=alloc.status.value
-#             ))
-
-#     return ProjectTasksResponse(
-#         project_id=project.id,
-#         project_name=project.name,
-#         tasks=task_list
-#     )
-
-
-
-# @router.get("/{project_id}/tasks/reviewer", response_model=ProjectTasksResponse)
-# async def list_project_tasks_assigned_to_reviewers(
-#     project_id: str,
-#     status: Optional[str] = Query(None),
-#     reviewer_email: Optional[str] = Query(None),
-#     reviewer_id: Optional[str] = Query(None),
-#     prompt_id: Optional[str] = Query(None),
-#     session: AsyncSession = Depends(get_session)
-# ):
-#     """List tasks in a project along with their reviewer allocations and reviews.
-#     Allows filtering by allocation status, reviewer email/ID, and prompt ID.
-#     """
-#     result = await session.execute(
-#         select(Project)
-#         .options(
-#             selectinload(Project.tasks)
-#             .selectinload(Task.submissions)
-#             .selectinload(Submission.review_allocations)
-#             .selectinload(ReviewerAllocation.reviewer),
-#             selectinload(Project.tasks)
-#             .selectinload(Task.prompt),
-#             selectinload(Project.tasks)
-#             .selectinload(Task.submissions)
-#             .selectinload(Submission.reviews)
-#         )
-#         .where(Project.id == project_id)
-#     )
-#     project = result.scalars().first()
-#     if not project:
-#         raise HTTPException(status_code=404, detail="Project not found")
-
-#     task_list = []
-#     for task in project.tasks:
-#         for submission in task.submissions:
-#             for rev_alloc in submission.review_allocations:
-#                 if status and rev_alloc.status.value != status:
-#                     continue
-#                 if reviewer_email and (rev_alloc.reviewer.email if rev_alloc.reviewer else None) != reviewer_email:
-#                     continue
-#                 if reviewer_id and rev_alloc.reviewer_id != reviewer_id:
-#                     continue
-#                 if prompt_id and task.prompt_id != prompt_id:
-#                     continue
-
-#                 # Find review by this reviewer for this submission
-#                 review = next((r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id), None)
-
-#                 # Get coins/payment earned by reviewer for this submission (if any)
-#                 payment_result = await session.execute(
-#                     select(CoinPayment)
-#                     .where(
-#                         CoinPayment.user_id == rev_alloc.reviewer_id,
-#                         CoinPayment.project_id == project.id,
-#                         CoinPayment.task_id == task.id
-#                     )
-#                 )
-#                 payment = payment_result.scalars().first()
-
-#                 task_list.append(TaskWithUser(
-#                     task_id=task.id,
-#                     assignment_id=rev_alloc.id,
-#                     prompt_id=task.prompt_id,
-#                     sentence_id=task.prompt.id if task.prompt else None,
-#                     sentence_text=task.prompt.text if task.prompt else None,
-#                     user_id=rev_alloc.reviewer_id,
-#                     user_email=rev_alloc.reviewer.email if rev_alloc.reviewer else None,
-#                     assigned_at=rev_alloc.assigned_at,
-#                     status=rev_alloc.status.value,
-#                     review_scores=review.scores if review else None,
-#                     review_total_score=review.total_score if review else None,
-#                     review_decision=review.decision.value if review else None,
-#                     review_comments=review.comments if review else None,
-#                     total_coins_earned=payment.coins_earned if payment else 0
-#                 ))
-
-#     return ProjectTasksResponse(
-#         project_id=project.id,
-#         project_name=project.name,
-#         tasks=task_list
-#     )
-
-
-
-
 @router.get("/projects/by-email/{email}", response_model=List[Project])
 async def get_projects_by_email(
     email: str,
@@ -299,8 +153,7 @@ async def get_projects_by_email(
 
 
 
-
-@router.get("/{project_id}/tasks/detailed")
+@router.get("/{project_id}/tasks/detailed", response_model=Union[ProjectTasksResponseRich, ProjectReviewerTasksResponse])
 async def list_project_tasks_by_role(
     project_id: str,
     email: str = Query(..., description="User email"),
@@ -393,9 +246,7 @@ async def list_project_tasks_by_role(
         )
 
     elif user.role == Role.reviewer:
-        # ------------------------------
-        # SAME LOGIC AS YOUR REVIEWER ROUTE
-        # ------------------------------
+        
         query = (
             select(Project)
             .options(
@@ -410,22 +261,33 @@ async def list_project_tasks_by_role(
             .where(Project.id == project_id)
         )
 
+        if email:
+            query = (
+                query.join(Project.tasks)
+                    .join(Task.submissions)
+                    .join(Submission.review_allocations)
+                    .join(ReviewerAllocation.reviewer)
+            )
+            if email:
+                query = query.where(User.email.ilike(email))
+
         result = await session.execute(query)
         project = result.scalars().first()
         if not project:
             raise HTTPException(status_code=404, detail="Project not found")
 
+        # --- Prefetch payments ---
         task_ids = [t.id for t in project.tasks]
         payment_result = await session.execute(
             select(CoinPayment).where(
                 CoinPayment.project_id == project.id,
-                CoinPayment.task_id.in_(task_ids),
+                CoinPayment.task_id.in_(task_ids)
             )
         )
         all_payments = payment_result.scalars().all()
         payment_lookup = {(p.user_id, p.task_id): p for p in all_payments}
 
-        from collections import defaultdict
+        # --- Group tasks by reviewer ---
         reviewers_map = defaultdict(lambda: {"reviewer_email": None, "tasks": []})
 
         for task in project.tasks:
@@ -438,17 +300,14 @@ async def list_project_tasks_by_role(
                 )
 
                 for rev_alloc in submission.review_allocations:
-                    if rev_alloc.reviewer and rev_alloc.reviewer.email != email:
-                        continue
                     if status and rev_alloc.status.value.lower() != status.lower():
                         continue
 
-                    review = next(
-                        (r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id),
-                        None,
-                    )
+                    review = next((r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id), None)
                     payment = payment_lookup.get((rev_alloc.reviewer_id, task.id))
 
+
+                    # Build task details
                     task_details = await build_task_details(
                         is_reviewer=True,
                         task=task,
@@ -456,17 +315,19 @@ async def list_project_tasks_by_role(
                         submission=submission,
                         review=review,
                         payment=payment,
-                        user_email=user_email_value,
+                        user_email=user_email_value
                     )
 
+                    # Insert into reviewer grouping
                     reviewers_map[rev_alloc.reviewer_id]["reviewer_email"] = rev_alloc.reviewer.email
                     reviewers_map[rev_alloc.reviewer_id]["tasks"].append(task_details)
 
+        # --- Transform into response ---
         reviewers_out = [
             ReviewerWithTasks(
                 reviewer_id=rid,
                 reviewer_email=data["reviewer_email"],
-                tasks=data["tasks"],
+                tasks=data["tasks"]
             )
             for rid, data in reviewers_map.items()
         ]
@@ -474,220 +335,139 @@ async def list_project_tasks_by_role(
         return ProjectReviewerTasksResponse(
             project_id=project.id,
             project_name=project.name,
-            reviewers=reviewers_out,
+            reviewers=reviewers_out
         )
 
-    else:
-        raise HTTPException(status_code=400, detail="Unsupported role for this query")
 
 
 
+@router.get("/{project_id}/tasks/detailed/all", response_model=ProjectTasksGeneralResponse)
+async def list_project_tasks_general(
+    project_id: str,
+    email: Optional[str] = Query(None, description="Filter by user email"),
+    role: Optional[Role] = Query(None, description="Filter by role: agent or reviewer"),
+    status: Optional[str] = Query(None, description="Filter by task/submission status"),
+    prompt_id: Optional[str] = Query(None, description="Filter by prompt id"),
+    limit: int = Query(50, ge=1, le=200, description="Max tasks per page"),
+    offset: int = Query(0, ge=0, description="Pagination offset"),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Fetch detailed project tasks with flexible filtering + pagination.
+    - If no email is provided → return ALL tasks in the project.
+    - If role=agent → return only agent allocations.
+    - If role=reviewer → return only reviewer allocations.
+    - If email is provided → filter tasks linked to that email.
+    - Supports pagination with `limit` and `offset`.
+    """
+    # 1. Load the project with tasks
+    result = await session.execute(
+        select(Project)
+        .options(
+            selectinload(Project.tasks).selectinload(Task.prompt),
+            selectinload(Project.tasks).selectinload(Task.allocations).selectinload(ProjectAllocation.user),
+            selectinload(Project.tasks).selectinload(Task.allocations).selectinload(ProjectAllocation.submission)
+                .options(
+                    selectinload(Submission.reviews),
+                    selectinload(Submission.review_allocations).selectinload(ReviewerAllocation.reviewer),
+                ),
+            selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.user),
+            selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.assignment),
+        )
+        .where(Project.id == project_id)
+    )
+    project = result.scalars().first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
 
+    all_tasks_out = []
 
+    # 2. Collect tasks (agents + reviewers)
+    for task in project.tasks:
+        if prompt_id and task.prompt_id != prompt_id:
+            continue
 
+        # --- AGENTS ---
+        for alloc in task.allocations:
+            if email and alloc.user and alloc.user.email != email:
+                continue
+            if role and role == Role.reviewer:
+                continue
+            if status and alloc.status.value.lower() != status.lower():
+                continue
 
+            submission = alloc.submission
+            review_info = ReviewInfo(reviewers=[])
+            if submission and submission.review_allocations:
+                for rev_alloc in submission.review_allocations:
+                    review_info.reviewers.append(
+                        ReviewerInfo(
+                            reviewer_id=rev_alloc.reviewer_id,
+                            reviewer_email=getattr(rev_alloc.reviewer, "email", None),
+                            review_scores=None,
+                            review_total_score=None,
+                            review_decision=rev_alloc.status.value,
+                            review_comments=None,
+                            total_coins_earned=None,
+                        )
+                    )
 
+            all_tasks_out.append(
+                await build_task_details(
+                    task,
+                    alloc=alloc,
+                    submission=submission,
+                    rev_alloc=None,
+                    review=review_info if review_info.reviewers else None,
+                    payment=None,
+                    user_email=alloc.user.email if alloc.user else None,
+                )
+            )
 
+        # --- REVIEWERS ---
+        for submission in task.submissions:
+            user_email_value = (
+                submission.user.email if submission.user else (
+                    submission.assignment.user_email if submission.assignment else None
+                )
+            )
 
+            for rev_alloc in submission.review_allocations:
+                if email and rev_alloc.reviewer and rev_alloc.reviewer.email != email:
+                    continue
+                if role and role == Role.agent:
+                    continue
+                if status and rev_alloc.status.value.lower() != status.lower():
+                    continue
 
+                review = next(
+                    (r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id),
+                    None,
+                )
 
+                all_tasks_out.append(
+                    await build_task_details(
+                        is_reviewer=True,
+                        task=task,
+                        rev_alloc=rev_alloc,
+                        submission=submission,
+                        review=review,
+                        payment=None,  # add payment lookup if needed
+                        user_email=user_email_value,
+                    )
+                )
 
+    # 3. Apply pagination
+    total_count = len(all_tasks_out)
+    paginated_tasks = all_tasks_out[offset: offset + limit]
 
-# @router.get("/{project_id}/tasks/agent/detailed", response_model=ProjectTasksResponseRich)
-# async def list_project_tasks_assigned_to_agents(
-#     project_id: str,
-#     status: Optional[str] = None,
-#     user_email: Optional[str] = None,
-#     user_id: Optional[str] = None,
-#     prompt_id: Optional[str] = None,
-#     session: AsyncSession = Depends(get_session)
-# ):
-#     result = await session.execute(
-#         select(Project)
-#         .options(
-#             # --- Keep your existing loads ---
-#             selectinload(Project.tasks).selectinload(Task.prompt),
-#             selectinload(Project.tasks)
-#                 .selectinload(Task.allocations)
-#                 .selectinload(ProjectAllocation.user),
-            
-#             # --- Modify this section to add the new loads ---
-#             selectinload(Project.tasks)
-#                 .selectinload(Task.allocations)
-#                 .selectinload(ProjectAllocation.submission)
-#                 .options(
-#                     # 1. ADD THIS: Eagerly load the 'reviews' for each submission
-#                     selectinload(Submission.reviews),
-                    
-#                     # 2. ADD THIS: Eagerly load the 'reviewer' user for each review allocation
-#                     selectinload(Submission.review_allocations)
-#                         .selectinload(ReviewerAllocation.reviewer)
-#                 )
-#         )
-#         .where(Project.id == project_id)
-#     )
-#     project = result.scalars().first()
-
-#     if not project:
-#         raise HTTPException(status_code=404, detail="Project not found")
-
-#     tasks_out = []
-#     for task in project.tasks:
-#         if prompt_id and task.prompt_id != prompt_id:
-#             continue
-
-#         for alloc in task.allocations:
-#             # ✅ Filters
-#             if status and alloc.status.value != status:
-#                 continue
-
-#             # ✅ Use getattr to avoid triggering lazy-load
-#             email_value = getattr(alloc.user, "email", None) or alloc.user_email
-#             if user_email and email_value != user_email:
-#                 continue
-#             if user_id and alloc.user_id != user_id:
-#                 continue
-
-#             submission = alloc.submission
-
-#             # ✅ Collect reviewer allocations (all reviewers, not just first pending)
-#             review_info = ReviewInfo(reviewers=[])
-#             if submission and submission.review_allocations:
-#                 for rev_alloc in submission.review_allocations:
-#                     reviewer = ReviewerInfo(
-#                         reviewer_id=rev_alloc.reviewer_id,
-#                         reviewer_email=getattr(rev_alloc.reviewer, "email", None),
-#                         review_scores=None,
-#                         review_total_score=None,
-#                         review_decision=rev_alloc.status.value,
-#                         review_comments=None,
-#                         total_coins_earned=None
-#                     )
-#                     review_info.reviewers.append(reviewer)
-
-#             # ✅ Build safe task details
-#             tasks_out.append(await build_task_details(
-#                 task,
-#                 alloc=alloc,
-#                 submission=submission,
-#                 rev_alloc=None,
-#                 review=review_info if review_info.reviewers else None,
-#                 payment=None,
-#                 user_email=email_value
-#             ))
-
-#     return ProjectTasksResponseRich(
-#         project_id=project.id,
-#         project_name=project.name,
-#         tasks=tasks_out
-#     )
-
-
-
-# # -------------------------
-# # Reviewer Tasks Endpoint
-# # -------------------------
-# from collections import defaultdict
-
-# @router.get("/{project_id}/tasks/reviewer/detailed", response_model=ProjectReviewerTasksResponse)
-# async def list_project_tasks_assigned_to_reviewers(
-#     project_id: str,
-#     status: Optional[str] = None,
-#     reviewer_email: Optional[str] = None,
-#     reviewer_id: Optional[str] = None,
-#     prompt_id: Optional[str] = None,
-#     session: AsyncSession = Depends(get_session)
-# ):
-#     # --- Same query setup as before ---
-#     query = (
-#         select(Project)
-#         .options(
-#             selectinload(Project.tasks).selectinload(Task.prompt),
-#             selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.user),
-#             selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.assignment),
-#             selectinload(Project.tasks).selectinload(Task.submissions)
-#                 .selectinload(Submission.review_allocations)
-#                 .selectinload(ReviewerAllocation.reviewer),
-#             selectinload(Project.tasks).selectinload(Task.submissions).selectinload(Submission.reviews),
-#         )
-#         .where(Project.id == project_id)
-#     )
-
-#     if reviewer_email or reviewer_id:
-#         query = (
-#             query.join(Project.tasks)
-#                  .join(Task.submissions)
-#                  .join(Submission.review_allocations)
-#                  .join(ReviewerAllocation.reviewer)
-#         )
-#         if reviewer_email:
-#             query = query.where(User.email.ilike(reviewer_email))
-#         if reviewer_id:
-#             query = query.where(ReviewerAllocation.reviewer_id == reviewer_id)
-
-#     result = await session.execute(query)
-#     project = result.scalars().first()
-#     if not project:
-#         raise HTTPException(status_code=404, detail="Project not found")
-
-#     # --- Prefetch payments ---
-#     task_ids = [t.id for t in project.tasks]
-#     payment_result = await session.execute(
-#         select(CoinPayment).where(
-#             CoinPayment.project_id == project.id,
-#             CoinPayment.task_id.in_(task_ids)
-#         )
-#     )
-#     all_payments = payment_result.scalars().all()
-#     payment_lookup = {(p.user_id, p.task_id): p for p in all_payments}
-
-#     # --- Group tasks by reviewer ---
-#     reviewers_map = defaultdict(lambda: {"reviewer_email": None, "tasks": []})
-
-#     for task in project.tasks:
-#         if prompt_id and task.prompt_id != prompt_id:
-#             continue
-
-#         for submission in task.submissions:
-#             user_email_value = submission.user.email if submission.user else (
-#                 submission.assignment.user_email if submission.assignment else None
-#             )
-
-#             for rev_alloc in submission.review_allocations:
-#                 if status and rev_alloc.status.value.lower() != status.lower():
-#                     continue
-
-#                 review = next((r for r in submission.reviews if r.reviewer_id == rev_alloc.reviewer_id), None)
-#                 payment = payment_lookup.get((rev_alloc.reviewer_id, task.id))
-
-
-#                 # Build task details
-#                 task_details = await build_task_details(
-#                     is_reviewer=True,
-#                     task=task,
-#                     rev_alloc=rev_alloc,
-#                     submission=submission,
-#                     review=review,
-#                     payment=payment,
-#                     user_email=user_email_value
-#                 )
-
-#                 # Insert into reviewer grouping
-#                 reviewers_map[rev_alloc.reviewer_id]["reviewer_email"] = rev_alloc.reviewer.email
-#                 reviewers_map[rev_alloc.reviewer_id]["tasks"].append(task_details)
-
-#     # --- Transform into response ---
-#     reviewers_out = [
-#         ReviewerWithTasks(
-#             reviewer_id=rid,
-#             reviewer_email=data["reviewer_email"],
-#             tasks=data["tasks"]
-#         )
-#         for rid, data in reviewers_map.items()
-#     ]
-
-#     return ProjectReviewerTasksResponse(
-#         project_id=project.id,
-#         project_name=project.name,
-#         reviewers=reviewers_out
-#     )
+    # 4. Response
+    return {
+        "project_id": project.id,
+        "project_name": project.name,
+        "total_count": total_count,
+        "limit": limit,
+        "offset": offset,
+        "returned_count": len(paginated_tasks),
+        "tasks": paginated_tasks,
+    }

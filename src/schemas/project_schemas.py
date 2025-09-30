@@ -142,7 +142,6 @@ class ProjectTasksResponseRich(BaseModel):
 
 
 
-
 class ReviewDetail(BaseModel):
     review_scores: Optional[Dict[str, int]]
     review_total_score: Optional[int]
@@ -181,3 +180,43 @@ class ProjectReviewerTasksResponse(BaseModel):
     project_id: str
     project_name: str
     reviewers: List[ReviewerWithTasks]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class ProjectTasksGeneralResponse(BaseModel):
+#     project_id: str
+#     project_name: str
+#     total_count: int
+#     limit: int
+#     offset: int
+#     returned_count: int
+#     tasks: List[TaskDetails]
+
+
+# class ReviewerTasksResponse(BaseModel):
+#     reviewer_id: str
+#     reviewer_email: str
+#     tasks: List[TaskDetails]
+
+
+# class ProjectReviewerTasksResponse(BaseModel):
+#     project_id: str
+#     project_name: str
+#     total_count: int
+#     limit: int
+#     offset: int
+#     returned_count: int
+#     reviewers: List[ReviewerTasksResponse]
+

@@ -16,6 +16,7 @@ from src.db.models import (
 )
 from src.db.database import get_session
 from src.utils.s3 import upload_file_to_s3
+from src.utils.text_helpers import get_effective_payload_text
 from src.schemas.submission_schemas import SubmissionOut, SubmissionResponse, PromptInfo
 from src.utils.file_to_s3 import fetch_and_upload_from_telegram
 
@@ -104,16 +105,19 @@ async def create_submission(
     - 403 Forbidden   → User does not match allocation.
     - 404 Not Found   → Allocation not found for this project.
     """
-    # --- Validate allocation ---
+    # --- Validate allocation --- also get the task prompt
     result = await session.execute(
         select(ProjectAllocation)
         .where(
             ProjectAllocation.id == assignment_id,
             ProjectAllocation.project_id == project_id
         )
-        .options(selectinload(ProjectAllocation.submission))
+        .options(
+            selectinload(ProjectAllocation.submission)
+        )
     )
     db_task_alloc = result.scalars().first()
+    print(f"db_task_alloc: {db_task_alloc}\n\n\n\n")
     if not db_task_alloc:
         raise HTTPException(status_code=404, detail="Allocation not found for this project")
 
@@ -241,6 +245,10 @@ async def list_submissions(
     submission_list = []
     for s in submissions:
         prompt_obj = s.task.prompt if s.task and s.task.prompt else None
+        payload_text=get_effective_payload_text(s, s.task.prompt),
+        if isinstance(payload_text, tuple) and len(payload_text) == 1:
+            payload_text = payload_text[0]
+
         project_id_resp = s.assignment.project_id if s.assignment else s.task.project_id if s.task else None
 
         submission_list.append(
@@ -252,7 +260,7 @@ async def list_submissions(
                 user_id=s.user.id if s.user else None,
                 user_email=s.user.email if s.user else None,
                 type=s.type,
-                payload_text=s.payload_text,
+                payload_text=payload_text,
                 file_url=s.file_url,
                 status=s.status,
                 created_at=s.created_at,
@@ -314,6 +322,11 @@ async def get_submission(
         raise HTTPException(status_code=404, detail="Submission not found")
 
     project_id = submission.assignment.project_id if submission.assignment else submission.task.project_id if submission.task else None
+
+    payload_text=get_effective_payload_text(submission, submission.task.prompt),
+    if isinstance(payload_text, tuple) and len(payload_text) == 1:
+        payload_text = payload_text[0]
+
     prompt_obj = submission.task.prompt if submission.task and submission.task.prompt else None
 
     return SubmissionResponse(
@@ -324,7 +337,7 @@ async def get_submission(
         user_id=submission.user_id,
         user_email=submission.user.email if submission.user else None,
         type=submission.type,
-        payload_text=submission.payload_text,
+        payload_text=payload_text,
         file_url=submission.file_url,
         status=submission.status,
         created_at=submission.created_at,

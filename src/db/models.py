@@ -47,7 +47,6 @@ class Status(str, Enum):
     pending = "pending"
     assigned = "assigned"
     submitted = "submitted"
-    reviewed = "reviewed"
     accepted = "accepted"
     approved = "approved"
     rejected = "rejected"
