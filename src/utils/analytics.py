@@ -71,7 +71,9 @@ async def get_contributor_stats(
     project_stats = {}
 
     # Initialize all projects from allocations and submissions
-    for item in allocations + [s.assignment for s in submissions if s.assignment]:
+    for item in allocations + [
+        s.assignment for s in submissions if s.assignment
+    ]:
         if not item or not item.project:
             continue
         project = item.project
@@ -104,6 +106,8 @@ async def get_contributor_stats(
             project_stats[key]["rejected"] += 1
         elif sub.status == Status.submitted:
             project_stats[key]["pending"] += 1
+
+
 
     # Allocations contribute to number assigned
     for alloc in allocations:

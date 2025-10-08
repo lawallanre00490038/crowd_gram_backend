@@ -4,10 +4,10 @@ from fastapi import HTTPException
 
 
 from src.utils.s3 import upload_file_to_s3
-from src.config import TELEGRAM_ID
+from src.config import BOT_TOKEN
 
 
-TELEGRAM_BOT_TOKEN = TELEGRAM_ID 
+TELEGRAM_BOT_TOKEN = BOT_TOKEN 
 
 
 async def fetch_and_upload_from_telegram(file_id: str, folder: str) -> str:

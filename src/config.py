@@ -9,6 +9,7 @@ OBS_ENDPOINT_URL=os.getenv("OBS_ENDPOINT_URL", "Yours")
 OBS_REGION=os.getenv("OBS_REGION", "Yours")
 OBS_BUCKET_NAME=os.getenv("OBS_BUCKET_NAME", "Yours")
 TELEGRAM_ID=os.getenv("TELEGRAM_ID", "Yours")
+BOT_TOKEN=os.getenv("BOT_TOKEN", "Yours")
 OBS_ENDPOINT_URL=os.getenv("OBS_ENDPOINT_URL", "Yours")
 DATABASE_URL = os.getenv("DATABASE_URL", "Yours")
 

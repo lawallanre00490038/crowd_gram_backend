@@ -5,7 +5,6 @@ from src.db.models import User, Role
 from src.utils.auth import get_password_hash
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
 async def create_user_in_db(session: AsyncSession, user: User) -> User:
     """Reusable function to create and persist a user."""
     existing_result = await session.execute(select(User).where(User.email == user.email))

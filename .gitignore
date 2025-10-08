@@ -3,3 +3,5 @@ venv/
 .env
 MYREADME.md
 
+src/test/
+/uploads/
