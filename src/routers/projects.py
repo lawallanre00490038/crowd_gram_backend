@@ -63,7 +63,6 @@ async def get_project(project_info: GetProjectInfo, session: AsyncSession = Depe
     return project
 
 
-
 @router.get("/project/{project_id}/review-parameters", response_model=List[str])
 async def get_review_parameters(
     project_id: str = Path(..., description="The ID of the project"),
@@ -116,6 +115,7 @@ async def get_project_instructions(
 
 
 
+
 @router.patch("/update/project/{project_id}", response_model=Project)
 async def update_project(project_id: str, project_in: ProjectUpdate, session: AsyncSession = Depends(get_session)):
     """Update a project (partial update)."""
@@ -133,6 +133,7 @@ async def update_project(project_id: str, project_in: ProjectUpdate, session: As
         return proj
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 
 

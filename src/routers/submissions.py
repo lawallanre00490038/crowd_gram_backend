@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Body
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Body, Query
 from typing import Dict, Optional, List, Any
 from fastapi import Form
 from datetime import datetime
@@ -17,16 +17,17 @@ from src.db.models import (
 from src.db.database import get_session
 from src.utils.s3 import upload_file_to_s3
 from src.utils.text_helpers import get_effective_payload_text
-from src.schemas.submission_schemas import SubmissionOut, SubmissionResponse, PromptInfo
+from src.schemas.submission_schemas import SubmissionResponse, PromptInfo
 from src.utils.file_to_s3 import fetch_and_upload_from_telegram
 
+
 router = APIRouter()
+ALLOWED_STATUSES = [Status.assigned, Status.accepted, Status.rejected, Status.redo, Status.submitted]
 
 
 # ---------------------------
 # FILE UPLOAD
 # ---------------------------
-
 async def handle_file_upload(file: UploadFile, folder: str, allowed_types: Optional[list[str]] = None) -> str:
     """
     Uploads a file to S3.
@@ -113,7 +114,8 @@ async def create_submission(
             ProjectAllocation.project_id == project_id
         )
         .options(
-            selectinload(ProjectAllocation.submission)
+            selectinload(ProjectAllocation.submission),
+            selectinload(ProjectAllocation.project)
         )
     )
     db_task_alloc = result.scalars().first()
@@ -127,8 +129,11 @@ async def create_submission(
     if user_email and db_task_alloc.user_email != user_email:
         raise HTTPException(status_code=403, detail="User email mismatch with allocation")
 
-    if db_task_alloc.submission:
+
+    existing_submission = db_task_alloc.submission
+    if existing_submission and existing_submission.status != Status.redo:
         raise HTTPException(status_code=400, detail="Submission already exists for this task")
+
 
     # --- Handle file uploads ---
     file_url = None
@@ -153,6 +158,7 @@ async def create_submission(
     else:
         raise HTTPException(status_code=400, detail="Task type must be specified")
 
+
     # --- Create submission ---
     submission = Submission(
         task_id=task_id,
@@ -170,12 +176,19 @@ async def create_submission(
     db_task_alloc.status = Status.submitted
     db_task_alloc.submitted_at = datetime.utcnow()
     session.add(db_task_alloc)
+    
+    # --- Track Project-level redo count ---
+    if existing_submission and existing_submission.status == Status.redo:
+        if db_task_alloc.project:
+            db_task_alloc.project.num_redo = (db_task_alloc.project.num_redo or 0) + 1
+            session.add(db_task_alloc.project)
+
 
     await session.commit()
     await session.refresh(submission)
 
     # --- Construct SubmissionResponse ---
-    project_id_resp = submission.assignment.project_id if submission.assignment else None
+    project_id_resp = db_task_alloc.project.id if db_task_alloc.project else None
 
     return SubmissionResponse(
         submission_id=submission.id,
@@ -184,6 +197,7 @@ async def create_submission(
         assignment_id=submission.assignment_id,
         user_id=submission.user_id,
         type=submission.type,
+        num_redo=db_task_alloc.project.num_redo if db_task_alloc.project else None,
         payload_text=submission.payload_text,
         file_url=submission.file_url,
         status=submission.status,
@@ -200,7 +214,7 @@ async def list_submissions(
     project_id: Optional[str] = None,
     user_id: Optional[str] = None,
     user_email: Optional[str] = None,
-    status: Optional[Status] = None,
+    status: Optional[List[Status]] = Query([Status.submitted], description="Filter by status(es)"),
     session: AsyncSession = Depends(get_session),
 ):
     """
@@ -213,6 +227,12 @@ async def list_submissions(
     Returns:
         List[SubmissionOut]: Submission records with contributor and project info.
     """
+    for s in status:
+        if s not in ALLOWED_STATUSES:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Status must be one of: {[s.value for s in ALLOWED_STATUSES]}"
+            )
 
     query = (
         select(Submission)

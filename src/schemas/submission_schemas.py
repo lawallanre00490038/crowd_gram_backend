@@ -46,6 +46,7 @@ class SubmissionResponse(BaseModel):
     payload_text: Optional[str] = None
     file_url: Optional[str] = None
     status: Optional[Status] = None
+    num_redo: Optional[int] = None
     created_at: datetime
     updated_at: datetime
     prompt: Optional[PromptInfo] = None

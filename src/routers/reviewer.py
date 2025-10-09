@@ -18,7 +18,8 @@ from src.db.models import (
   Review,
   Project,
   ProjectAllocation,
-  Task
+  Task,
+  CoinPayment
 )
 from src.schemas.reviewer_schema import (
     FilterReviewResponse,
@@ -27,7 +28,7 @@ from src.schemas.reviewer_schema import (
 
 
 router = APIRouter()
-ALLOWED_STATUSES = [Status.pending, Status.accepted, Status.rejected]
+ALLOWED_STATUSES = [Status.pending, Status.accepted, Status.rejected, Status.redo]
 
 
 @router.post("/assign_submission_to_reviewer/")
@@ -308,9 +309,25 @@ async def review_submission(
     approved = total_score >= threshold_score
     scored_percent = (total_score / max_score * 100) if max_score else 0
 
+
     # 4️⃣ Update submission status
-    submission.status = Status.accepted if approved else Status.rejected
+    if not submission.meta:
+        submission.meta = {}
+
+    if not approved:
+        # Increment redo_count
+        submission.meta["redo_count"] = submission.meta.get("redo_count", 0) + 1
+
+        # Check if redo allowed
+        if project.num_redo is None or submission.meta["redo_count"] <= project.num_redo:
+            submission.status = Status.redo
+        else:
+            submission.status = Status.rejected
+    else:
+        submission.status = Status.accepted
+
     session.add(submission)
+
 
     # 5️⃣ Create or update review record
     existing_review_result = await session.execute(
@@ -367,11 +384,15 @@ async def review_submission(
     await session.commit()
     await session.refresh(submission)
 
-    # 9️⃣ Award coins/payment
-    if approved:
+
+    # ------------------------------
+    # 9️⃣ Award coins (one-time per submission)
+    # ------------------------------
+    if submission.status == Status.accepted:
         await award_coins_on_accept(session, submission)
 
-    await award_reviewer_payment(session, reviewer_id, project.id)
+    await award_reviewer_payment(session, reviewer_id, submission.id)
+
 
     return {
         "submission_status": submission.status,
@@ -399,7 +420,7 @@ async def reviewer_review_submission(
     if status not in ALLOWED_STATUSES:
         raise HTTPException(
             status_code=400,
-            detail="Reviewer can only set status to accepted, rejected, or revoked",
+            detail="Reviewer can only set status to accepted, rejected, or redo or pending",
         )
 
     result = await session.execute(
