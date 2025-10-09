@@ -14,6 +14,7 @@ async def fetch_and_upload_from_telegram(file_id: str, folder: str) -> str:
     """
     Download a Telegram file using its file_id and upload to S3.
     """
+    print(f"Downloading file from Telegram with file_id {file_id}")
     async with aiohttp.ClientSession() as session:
         # Step 1: Get file path from Telegram
         async with session.get(

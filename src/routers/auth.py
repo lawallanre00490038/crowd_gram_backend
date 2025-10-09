@@ -12,6 +12,7 @@ from src.utils.auth import verify_password, get_password_hash, create_access_tok
 
 router = APIRouter()
 
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 

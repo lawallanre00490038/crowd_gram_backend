@@ -37,6 +37,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+
 # Response schema for user status
 class UserStatusResponse(BaseModel):
     role: RoleEnum

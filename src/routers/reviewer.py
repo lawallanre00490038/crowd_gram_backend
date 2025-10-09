@@ -8,9 +8,6 @@ from sqlmodel import Session, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-router = APIRouter()
-
-
 from src.db.database import get_session
 from src.services.coins import award_coins_on_accept, award_reviewer_payment  
 from src.db.models import (
@@ -30,13 +27,14 @@ from src.schemas.reviewer_schema import (
 
 
 router = APIRouter()
+ALLOWED_STATUSES = [Status.pending, Status.accepted, Status.rejected]
 
 
 @router.post("/assign_submission_to_reviewer/")
 async def assign_submission_to_reviewer(
     project_id: str,
     submission_id: str,
-    reviewer_id: str,
+    reviewer_identifier: str = Query(..., description="Reviewer ID or email"),
     session: AsyncSession = Depends(get_session)
 ):
     """
@@ -58,6 +56,17 @@ async def assign_submission_to_reviewer(
     Raises:
     - HTTPException 400: If the submission is already assigned to the reviewer.
     """
+     # 1️⃣ Resolve reviewer (by ID or email)
+    reviewer_query = select(User).where(
+        (User.id == reviewer_identifier) | (User.email == reviewer_identifier)
+    )
+    reviewer_result = await session.execute(reviewer_query)
+    reviewer = reviewer_result.scalars().first()
+    if not reviewer:
+        raise HTTPException(status_code=404, detail="Reviewer not found")
+
+    reviewer_id = reviewer.id  # normalize to ID internally
+
     # Check if submission exists
     sub_result = await session.execute(
         select(Submission).where(Submission.id == submission_id)
@@ -221,8 +230,8 @@ async def upload_reviewer_allocations(
 async def review_submission(
     project_id: str,
     submission_id: str,
-    reviewer_id: str,
     scores: Dict[str, int],
+    reviewer_identifier: str = Query(..., description="Reviewer ID or email"),
     comments: Optional[str] = None,
     session: AsyncSession = Depends(get_session),
 ):
@@ -257,6 +266,16 @@ async def review_submission(
             - Automatically updates the submitter’s allocation and awards coins if approved.
             - Review is recorded for audit and analytics purposes.
     """
+    # 1️⃣ Resolve reviewer (accept ID or email)
+    reviewer_query = select(User).where(
+        (User.id == reviewer_identifier) | (User.email == reviewer_identifier)
+    )
+    reviewer_result = await session.execute(reviewer_query)
+    reviewer = reviewer_result.scalars().first()
+
+    if not reviewer:
+        raise HTTPException(status_code=404, detail="Reviewer not found")
+    reviewer_id = reviewer.id  # ensure we use the actual ID internally
 
     # 1️⃣ Fetch submission with project and allocation
     result = await session.execute(
@@ -365,14 +384,11 @@ async def review_submission(
 
 
 
-
-
-
 @router.patch("/update/{submission_id}/review", response_model=Submission)
 async def reviewer_review_submission(
     project_id: str,
     submission_id: str,
-    status: Status = Body(..., description="Decision: accepted, rejected, redo"),
+    status: Optional[List[Status]] = Query([Status.pending], description="Filter by status(es)"),
     session: AsyncSession = Depends(get_session),
 ):
     """
@@ -380,7 +396,7 @@ async def reviewer_review_submission(
     - Allowed statuses: accepted, rejected, redo.
     - Triggers coin award if accepted.
     """
-    if status not in [Status.accepted, Status.rejected, Status.revoked]:
+    if status not in ALLOWED_STATUSES:
         raise HTTPException(
             status_code=400,
             detail="Reviewer can only set status to accepted, rejected, or revoked",
@@ -421,8 +437,6 @@ async def reviewer_review_submission(
 # ----------------------------
 # Filter Reviews
 # ----------------------------
-ALLOWED_STATUSES = [Status.pending, Status.accepted, Status.rejected]
-
 @router.get(
     "/{reviewer_id}/filter", 
     response_model=List[FilterReviewResponse]

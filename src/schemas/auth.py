@@ -22,3 +22,13 @@ class UserLogin(SQLModel):
     email: Optional[str] = None
     password: Optional[str] = None
     telegram_id: Optional[str] = None
+
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "email": "mary@example.com",
+                "password": "pass123",
+            }
+        }
+    }

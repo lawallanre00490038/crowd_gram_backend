@@ -83,21 +83,56 @@ async def get_review_parameters(
     return review_params
 
 
+@router.get("/project/{project_id}/instructions", response_model=str | None)
+async def get_project_instructions(
+    project_id: str = Path(..., description="The ID of the project"),
+    role: Role = Query(..., description="The role of the user"),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Get project instructions based on the user's role.
+    """
+    result = await session.execute(
+        select(
+            Project.agent_instructions,
+            Project.reviewer_instructions,
+            Project.super_reviewer_instructions
+        ).where(Project.id == project_id)
+    )
+    instructions = result.first()
+
+    if not instructions:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    # ✅ Role-based mapping
+    if role == Role.agent:
+        return instructions[0]
+    elif role == Role.reviewer:
+        return instructions[1]
+    elif role == Role.super_reviewer:
+        return instructions[2]
+    else:
+        raise HTTPException(status_code=400, detail=f"Unsupported role: {role}")
+
+
+
 @router.patch("/update/project/{project_id}", response_model=Project)
 async def update_project(project_id: str, project_in: ProjectUpdate, session: AsyncSession = Depends(get_session)):
     """Update a project (partial update)."""
     proj = await session.get(Project, project_id)
     if not proj:
         raise HTTPException(status_code=404, detail="Project not found")
+    try:
+        data = project_in.dict(exclude_unset=True)
+        for k, v in data.items():
+            setattr(proj, k, v)
 
-    data = project_in.dict(exclude_unset=True)
-    for k, v in data.items():
-        setattr(proj, k, v)
-
-    session.add(proj)
-    await session.commit()
-    await session.refresh(proj)
-    return proj
+        session.add(proj)
+        await session.commit()
+        await session.refresh(proj)
+        return proj
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 

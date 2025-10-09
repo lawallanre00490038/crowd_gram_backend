@@ -1,7 +1,7 @@
 from email import message
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import select
 from src.db.models import User, CoinPayment, Role, ProjectAllocation, Submission, Review, Status
 from src.db.database import get_session
 from sqlalchemy.ext.asyncio import AsyncSession

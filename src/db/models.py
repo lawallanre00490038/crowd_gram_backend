@@ -50,6 +50,7 @@ class Status(str, Enum):
     accepted = "accepted"
     approved = "approved"
     rejected = "rejected"
+    redo = "redo"
 
 
 # ----------------------------
@@ -65,6 +66,7 @@ class Project(SQLModel, table=True):
     )
     name: str
     description: Optional[str] = None
+    num_redo: Optional[int] = Field(default=None)
 
     # quotas & reuse defaults
     per_user_quota: int = Field(default=180)
@@ -74,6 +76,12 @@ class Project(SQLModel, table=True):
     agent_coin: float = Field(default=0.0)
     reviewer_coin: float = Field(default=0.0)
     super_reviewer_coin: float = Field(default=0.0)
+    
+
+    agent_instructions: Optional[str] = None
+    reviewer_instructions: Optional[str] = None
+    super_reviewer_instructions: Optional[str] = None
+
 
     # default fiat amounts (optional)
     agent_amount: float = Field(default=0.0)

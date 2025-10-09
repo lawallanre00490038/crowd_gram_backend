@@ -44,13 +44,37 @@ class ReviewScores(BaseModel):
 
     class Config:
         extra='allow' 
+        
 
 class ProjectUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     is_public: Optional[bool] = None
+
     agent_coin: Optional[float] = None
     reviewer_coin: Optional[float] = None
+    super_reviewer_coin: Optional[float] = None
+
+    agent_amount: Optional[float] = None
+    reviewer_amount: Optional[float] = None
+    super_reviewer_amount: Optional[float] = None
+
+    agent_instructions: Optional[str] = None
+    reviewer_instructions: Optional[str] = None
+    super_reviewer_instructions: Optional[str] = None
+
+    per_user_quota: Optional[int] = None
+    reuse_count: Optional[int] = None
+
+    review_parameters: Optional[List[str]] = None
+    review_scale: Optional[int] = None
+    review_threshold_percent: Optional[float] = None
+
+    total_prompts: Optional[int] = None
+    total_tasks: Optional[int] = None
+    total_submissions: Optional[int] = None
+
+
 
 class GetProjectInfo(BaseModel):
     id: Optional[str] = None
