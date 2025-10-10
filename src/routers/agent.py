@@ -95,6 +95,7 @@ async def update_task(task_id: str, task: Task, session: AsyncSession = Depends(
     await session.commit()
     await session.refresh(db_task)
     return db_task
+    
 
 
 @router.delete("/{task_id}/delete")

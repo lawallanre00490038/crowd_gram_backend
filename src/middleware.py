@@ -53,6 +53,7 @@ allowed_origins = [
     "https://genaigov.ai",
     "https://api.genaigov.ai",
     "https://africanvoices.io",
+    "http://127.0.0.1:3000",
     "https://main.d1wrs85izeeycs.amplifyapp.com",
 ]
 

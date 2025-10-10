@@ -78,8 +78,8 @@ async def get_review_parameters(
 
     if review_params is None:
         raise HTTPException(status_code=404, detail="Project not found")
-
     return review_params
+
 
 
 @router.get("/project/{project_id}/instructions", response_model=str | None)

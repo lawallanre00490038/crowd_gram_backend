@@ -1,14 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, Query, HTTPException
-from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from fastapi import APIRouter, Depends, Query
 from datetime import datetime
-from typing import List, Optional
-from src.db.models import ProjectAllocation, ReviewerAllocation, Submission, User 
 
 from src.db.models import  Status
 from src.db.database import get_session
-from src.utils.status_utils import get_allocations_by_status
 from src.utils.analytics import (
     get_contributor_stats,
     get_reviewer_stats,
@@ -19,8 +14,7 @@ from src.schemas.status import (
     ContributorStats, 
     ReviewerStats, 
     PlatformStats, 
-    DailyStatsResponse,
-    ProjectAllocationResponse
+    DailyStatsResponse
 )
 
 

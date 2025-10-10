@@ -200,10 +200,22 @@ class Task(SQLModel, table=True):
     allocations: List["ProjectAllocation"] = Relationship(back_populates="task")
     submissions: List["Submission"] = Relationship(back_populates="task")
     coin_payments: List["CoinPayment"] = Relationship(back_populates="task")
+
+
     assignments: List["ProjectAllocation"] = Relationship(back_populates="task")
+    # read-only alias (if you want to keep the name `assignments`)
+    # assignments: List["ProjectAllocation"] = Relationship(
+    #     back_populates="task",
+    #     viewonly=True,  # prevents writes, resolves conflict
+    #     overlaps="allocations"
+    # )
+
 
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow, sa_column_kwargs={"onupdate": utcnow})
+
+
+
 
 
 

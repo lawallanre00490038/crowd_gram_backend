@@ -2,7 +2,8 @@
 import os
 from dotenv import load_dotenv
 from sqlmodel import SQLModel
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+
 from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
@@ -25,9 +26,14 @@ engine = create_async_engine(
 )
 
 # Async session factory
-async_session_maker = sessionmaker(
+# async_session_maker = sessionmaker(
+#     bind=engine,
+#     class_=AsyncSession,
+#     expire_on_commit=False
+# )
+
+async_session_maker = async_sessionmaker(
     bind=engine,
-    class_=AsyncSession,
     expire_on_commit=False
 )
 

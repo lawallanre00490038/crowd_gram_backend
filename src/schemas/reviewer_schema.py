@@ -25,6 +25,6 @@ class ReviewerHistoryResponse(BaseModel):
     submission_id: str
     sentence_id: Optional[str] = None
     prompt: Optional[str] = None
-    contributor_id: str
+    reviewer_id: str
     status: str
     reviewed_at: Optional[datetime] = None

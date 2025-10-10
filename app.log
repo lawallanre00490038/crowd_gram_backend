@@ -1,0 +1,80 @@
+2025-10-10 12:45:15,755 - INFO - 127.0.0.1:59238 - GET /api/v1/project/list/projects - Status: [92m200[0m - Time: 1.72s
+2025-10-10 12:45:15,806 - INFO - 127.0.0.1:59238 - GET /projects/string/metrics - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 12:45:15,817 - INFO - 127.0.0.1:65196 - GET /projects/string/submissions - Status: [93m404[0m - Time: 0.01s - Reason: Not Found
+2025-10-10 12:45:15,823 - INFO - 127.0.0.1:55544 - GET /projects/string/metrics - Status: [93m404[0m - Time: 0.01s - Reason: Not Found
+2025-10-10 12:45:15,828 - INFO - 127.0.0.1:49898 - GET /projects/string/submissions - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 12:45:27,975 - INFO - 127.0.0.1:56118 - GET /projects/africa/metrics - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 12:45:27,981 - INFO - 127.0.0.1:64352 - GET /projects/africa/submissions - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 12:45:32,289 - INFO - 127.0.0.1:64352 - GET /projects/string/metrics - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 12:45:32,291 - INFO - 127.0.0.1:56118 - GET /projects/string/submissions - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 12:45:34,223 - INFO - 127.0.0.1:56118 - GET /projects/africa/metrics - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 12:45:34,224 - INFO - 127.0.0.1:64352 - GET /projects/africa/submissions - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 13:03:29,427 - INFO - 127.0.0.1:62433 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-10 13:03:29,790 - INFO - 127.0.0.1:62433 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.11s
+2025-10-10 13:04:15,599 - INFO - 127.0.0.1:60110 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 2.53s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 13:04:22,077 - INFO - 127.0.0.1:50914 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.94s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 13:05:05,886 - INFO - 127.0.0.1:56020 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-10 13:05:05,991 - INFO - 127.0.0.1:56020 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.00s
+2025-10-10 13:05:15,921 - INFO - 127.0.0.1:49667 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.57s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 13:05:23,035 - INFO - 127.0.0.1:53274 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.63s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 13:05:59,037 - INFO - 127.0.0.1:50379 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.58s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 13:06:51,534 - ERROR - HTTPException: Status must be one of: ['assigned', 'accepted', 'rejected', 'redo', 'submitted'] at GET /api/v1/submission/all/agent
+2025-10-10 13:06:51,541 - INFO - 127.0.0.1:54557 - GET /api/v1/submission/all/agent - Status: [93m400[0m - Time: 0.01s - Reason: Status must be one of: ['assigned', 'accepted', 'rejected', 'redo', 'submitted']
+2025-10-10 13:07:02,412 - INFO - 127.0.0.1:56315 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.54s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 13:08:31,306 - INFO - 127.0.0.1:62620 - GET /api/v1/project/africa/tasks/detailed/all - Status: [92m200[0m - Time: 7.22s
+2025-10-10 13:11:50,965 - INFO - 127.0.0.1:64429 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.89s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 13:12:03,376 - INFO - 127.0.0.1:49666 - GET /api/v1/submission/83e7b6ba-3931-48fa-a417-ceec7786e6cc/agent - Status: [92m200[0m - Time: 2.60s
+2025-10-10 14:08:12,203 - INFO - 127.0.0.1:54045 - GET /api/v1/status/contributor/ibrahim@example.com - Status: [92m200[0m - Time: 10.14s
+2025-10-10 14:08:41,427 - INFO - 127.0.0.1:53632 - GET /api/v1/status/reviewer/ibrahim@example.com - Status: [92m200[0m - Time: 4.37s
+2025-10-10 14:09:31,647 - INFO - 127.0.0.1:64092 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.65s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:10:51,397 - INFO - 127.0.0.1:58969 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 1.12s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:23:51,526 - INFO - 127.0.0.1:57288 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-10 14:23:51,945 - INFO - 127.0.0.1:57288 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.20s
+2025-10-10 14:24:09,337 - INFO - 127.0.0.1:53599 - GET /api/v1/agent/read/all - Status: [92m200[0m - Time: 7.32s
+2025-10-10 14:29:35,765 - INFO - 127.0.0.1:57155 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-10 14:29:51,068 - INFO - 127.0.0.1:57462 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.31s
+2025-10-10 14:30:45,395 - INFO - 127.0.0.1:56198 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [91m500[0m - Time: 9.51s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:35:48,019 - INFO - 127.0.0.1:52459 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [91m500[0m - Time: 11.03s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:36:08,822 - INFO - 127.0.0.1:53358 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [91m500[0m - Time: 7.13s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:40:34,815 - INFO - 127.0.0.1:54459 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [91m500[0m - Time: 2.90s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:41:23,795 - INFO - 127.0.0.1:58956 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [91m500[0m - Time: 7.09s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:46:21,592 - INFO - 127.0.0.1:64210 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [91m500[0m - Time: 7.36s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:46:50,098 - INFO - 127.0.0.1:53313 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [92m200[0m - Time: 9.92s
+2025-10-10 14:48:00,316 - ERROR - HTTPException: Reviewer not found at GET /api/v1/reviewer/83e7b6ba-3931-48fa-a417-ceec7786e6cc/filter
+2025-10-10 14:48:00,326 - INFO - 127.0.0.1:57313 - GET /api/v1/reviewer/83e7b6ba-3931-48fa-a417-ceec7786e6cc/filter - Status: [93m404[0m - Time: 1.87s - Reason: Reviewer not found
+2025-10-10 14:48:24,129 - INFO - 127.0.0.1:60342 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [91m500[0m - Time: 3.53s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:51:47,318 - INFO - 127.0.0.1:54209 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [92m200[0m - Time: 8.46s
+2025-10-10 14:52:14,582 - ERROR - HTTPException: Status must be one of: ['pending', 'accepted', 'rejected', 'redo'] at GET /api/v1/reviewer/ibrahim@example.com/filter
+2025-10-10 14:52:14,587 - INFO - 127.0.0.1:60468 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [93m400[0m - Time: 1.56s - Reason: Status must be one of: ['pending', 'accepted', 'rejected', 'redo']
+2025-10-10 14:52:24,082 - ERROR - HTTPException: Status must be one of: ['pending', 'accepted', 'rejected', 'redo'] at GET /api/v1/reviewer/ibrahim@example.com/filter
+2025-10-10 14:52:24,083 - INFO - 127.0.0.1:49296 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [93m400[0m - Time: 1.39s - Reason: Status must be one of: ['pending', 'accepted', 'rejected', 'redo']
+2025-10-10 14:52:36,845 - ERROR - HTTPException: Status must be one of: ['pending', 'accepted', 'rejected', 'redo'] at GET /api/v1/reviewer/ibrahim@example.com/filter
+2025-10-10 14:52:36,846 - INFO - 127.0.0.1:57883 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [93m400[0m - Time: 1.36s - Reason: Status must be one of: ['pending', 'accepted', 'rejected', 'redo']
+2025-10-10 14:52:54,607 - INFO - 127.0.0.1:51851 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [92m200[0m - Time: 3.76s
+2025-10-10 14:54:56,660 - ERROR - HTTPException: Reviewer can only set status to accepted, rejected, or redo or pending at PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review
+2025-10-10 14:54:56,663 - INFO - 127.0.0.1:60490 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [93m400[0m - Time: 0.01s - Reason: Reviewer can only set status to accepted, rejected, or redo or pending
+2025-10-10 14:55:16,986 - INFO - 127.0.0.1:57592 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [91m500[0m - Time: 6.43s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:57:45,069 - INFO - 127.0.0.1:60163 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [91m500[0m - Time: 1.81s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:58:09,636 - INFO - 127.0.0.1:58344 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [91m500[0m - Time: 6.99s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 14:58:15,937 - INFO - 127.0.0.1:58344 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [91m500[0m - Time: 2.20s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 15:06:46,730 - INFO - 127.0.0.1:52269 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [91m500[0m - Time: 5.05s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 15:09:23,445 - INFO - 127.0.0.1:57050 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [92m200[0m - Time: 7.44s
+2025-10-10 15:09:51,030 - INFO - 127.0.0.1:50517 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [92m200[0m - Time: 5.51s
+2025-10-10 15:10:03,900 - INFO - 127.0.0.1:54196 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [92m200[0m - Time: 2.27s
+2025-10-10 15:21:36,645 - INFO - 127.0.0.1:50184 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-10 15:21:56,860 - INFO - 127.0.0.1:64264 - GET / - Status: [92m200[0m - Time: 0.00s
+2025-10-10 15:22:13,548 - INFO - 127.0.0.1:60953 - GET /favicon.ico - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-10 15:22:14,248 - INFO - 127.0.0.1:60953 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.44s
+2025-10-10 15:22:45,527 - INFO - 127.0.0.1:49672 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 1.05s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 15:23:25,740 - INFO - 127.0.0.1:51666 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [92m200[0m - Time: 5.36s
+2025-10-10 15:55:07,710 - INFO - 127.0.0.1:63937 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [92m200[0m - Time: 7.58s
+2025-10-10 15:55:20,815 - INFO - 127.0.0.1:59630 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [92m200[0m - Time: 3.47s
+2025-10-10 16:39:48,587 - INFO - 127.0.0.1:53139 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.01s
+2025-10-10 16:40:01,832 - INFO - 127.0.0.1:63436 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.18s
+2025-10-10 16:41:31,668 - INFO - 127.0.0.1:53241 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [92m200[0m - Time: 7.60s
+2025-10-10 16:42:17,330 - INFO - 127.0.0.1:59897 - PATCH /api/v1/reviewer/update/83e7b6ba-3931-48fa-a417-ceec7786e6cc/review - Status: [92m200[0m - Time: 5.55s
+2025-10-10 16:42:23,514 - INFO - 127.0.0.1:59897 - GET /api/v1/reviewer/ibrahim@example.com/history - Status: [92m200[0m - Time: 1.82s
+2025-10-10 16:42:51,987 - INFO - 127.0.0.1:52798 - GET /api/v1/submission/83e7b6ba-3931-48fa-a417-ceec7786e6cc/agent - Status: [92m200[0m - Time: 2.40s
+2025-10-10 16:43:02,630 - INFO - 127.0.0.1:60098 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 0.55s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 16:46:45,777 - INFO - 127.0.0.1:52819 - GET /api/v1/submission/all/agent - Status: [91m500[0m - Time: 1.49s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-10 16:47:02,077 - INFO - 127.0.0.1:60383 - GET /api/v1/submission/all/agent - Status: [92m200[0m - Time: 5.05s

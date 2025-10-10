@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from sqlmodel import SQLModel
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
+
 import os
 from src.errors import register_all_errors
 from src.middleware import register_middleware
@@ -34,6 +36,9 @@ async def lifespan(app: FastAPI):
     yield
 
 
+
+
+
 app = FastAPI(
     lifespan=lifespan,
     title="Aiogram Telegram Bot Backend",
@@ -53,9 +58,10 @@ app = FastAPI(
 
 
 
+
 # Register error handlers and middleware
-# register_all_errors(app)
-# register_middleware(app)
+register_all_errors(app)
+register_middleware(app)
 
 @app.get("/")
 async def root():

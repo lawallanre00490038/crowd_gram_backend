@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Body, Query
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Query
 from typing import Dict, Optional, List, Any
 from fastapi import Form
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from sqlmodel import select
+
 
 from src.db.models import (
     Submission,
@@ -22,7 +23,13 @@ from src.utils.file_to_s3 import fetch_and_upload_from_telegram
 
 
 router = APIRouter()
-ALLOWED_STATUSES = [Status.assigned, Status.accepted, Status.rejected, Status.redo, Status.submitted]
+ALLOWED_STATUSES = [
+    Status.assigned, 
+    Status.accepted, 
+    Status.rejected, 
+    Status.redo, 
+    Status.submitted
+]
 
 
 # ---------------------------
@@ -225,51 +232,56 @@ async def list_submissions(
     - status (submitted, approved, rejected, etc.)
 
     Returns:
-        List[SubmissionOut]: Submission records with contributor and project info.
+        List[SubmissionResponse]: Submission records with contributor and project info.
     """
+
+    # ✅ Validate allowed statuses
     for s in status:
         if s not in ALLOWED_STATUSES:
             raise HTTPException(
                 status_code=400,
-                detail=f"Status must be one of: {[s.value for s in ALLOWED_STATUSES]}"
+                detail=f"Status must be one of: {[s.value for s in ALLOWED_STATUSES]}",
             )
 
+    # ✅ Build query with eager loading
     query = (
         select(Submission)
         .options(
-            selectinload(Submission.assignment)
-            .selectinload(ProjectAllocation.project),
-            selectinload(Submission.task)
-            .selectinload(Task.prompt),
+            selectinload(Submission.assignment).selectinload(ProjectAllocation.project),
+            selectinload(Submission.task).selectinload(Task.prompt),
             selectinload(Submission.user),
         )
     )
 
-    # Filter by project
+    # ✅ Filter by project
     if project_id:
         query = query.join(Submission.assignment).where(ProjectAllocation.project_id == project_id)
 
-    # Filter by contributor (ID or email)
+    # ✅ Filter by contributor (ID or email)
     if user_id:
         query = query.where(Submission.user_id == user_id)
-    if user_email:
+    elif user_email:
         query = query.join(Submission.user).where(User.email == user_email)
 
-    # Filter by submission status
+    # ✅ Fix status filtering (use IN instead of ==)
     if status:
-        query = query.where(Submission.status == status)
+        query = query.where(Submission.status.in_(status))
 
+    # ✅ Execute
     result = await session.execute(query)
-    submissions = result.scalars().all()
+    submissions = result.scalars().unique().all()  # unique() prevents duplicates from joins
 
+    # ✅ Construct response list
     submission_list = []
     for s in submissions:
         prompt_obj = s.task.prompt if s.task and s.task.prompt else None
-        payload_text=get_effective_payload_text(s, s.task.prompt),
+        payload_text = get_effective_payload_text(s, s.task.prompt)
         if isinstance(payload_text, tuple) and len(payload_text) == 1:
             payload_text = payload_text[0]
 
-        project_id_resp = s.assignment.project_id if s.assignment else s.task.project_id if s.task else None
+        project_id_resp = (
+            s.assignment.project_id if s.assignment else s.task.project_id if s.task else None
+        )
 
         submission_list.append(
             SubmissionResponse(
@@ -292,7 +304,9 @@ async def list_submissions(
                     media_url=prompt_obj.media_url if prompt_obj else None,
                     category=prompt_obj.category if prompt_obj else None,
                     domain=prompt_obj.domain if prompt_obj else None,
-                ) if prompt_obj else None
+                )
+                if prompt_obj
+                else None,
             )
         )
 
@@ -301,11 +315,9 @@ async def list_submissions(
 
 
 
-
 # ---------------------------
 # GET SUBMISSION BY ID
 # ---------------------------
-
 @router.get("/{submission_id}/agent", response_model=SubmissionResponse)
 async def get_submission(
     submission_id: str,
