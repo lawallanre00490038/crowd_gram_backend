@@ -74,7 +74,7 @@ async def allocate_project(
     for idx, user_id in enumerate(user_ids):
         user_email = user_emails[idx]
         already = allocated_map.get(user_id, 0)
-        to_assign = max(0, project.per_user_quota - already)
+        to_assign = max(0, project.agent_quota - already)
 
         while to_assign > 0 and slot_queue:
             prompt_id = slot_queue.popleft()

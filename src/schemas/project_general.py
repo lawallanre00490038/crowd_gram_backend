@@ -44,7 +44,7 @@ class TaskDetails(BaseModel):
     task_id: str
     assignment_id: Optional[str]
     assigned_at: Optional[datetime]
-    status: str
+    status: Optional[str] = None
     prompt: PromptInfo
     submission: Optional[SubmissionInfo]
     review: Optional[ReviewInfo] = None

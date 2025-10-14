@@ -4,6 +4,7 @@ from fastapi import Form
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from src.utils.reviwer_auto_assignment import auto_assign_reviewer
 from sqlmodel import select
 
 
@@ -196,6 +197,12 @@ async def create_submission(
 
     # --- Construct SubmissionResponse ---
     project_id_resp = db_task_alloc.project.id if db_task_alloc.project else None
+    result_auto_assign = await auto_assign_reviewer(
+        project_id=project_id,
+        submission=submission,
+        session=session
+    )
+    print(f"result_auto_assign: {result_auto_assign}\n\n\n\n")
 
     return SubmissionResponse(
         submission_id=submission.id,

@@ -26,7 +26,6 @@ version_prefix = f"/api/{version}"
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-
     try:
         pass
     except Exception as e:
@@ -65,7 +64,10 @@ register_middleware(app)
 
 @app.get("/")
 async def root():
-    return {"message": "FastAPI Crowdsource Backend is running!"}
+    return {
+        "message": "FastAPI Crowdsource Backend is running!"
+    }
+    
 
 app.include_router(users.router,  prefix=f"{version_prefix}/user", tags=["Users"])
 app.include_router(telegram.router, prefix=f"{version_prefix}/telegram", tags=["Telegram"])
@@ -76,10 +78,7 @@ app.include_router(reviewer.router, prefix=f"{version_prefix}/reviewer", tags=["
 app.include_router(status.router, prefix=f"{version_prefix}/status", tags=["Status"])
 
 
-
     
-
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(

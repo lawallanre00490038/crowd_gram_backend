@@ -14,8 +14,8 @@ class ProjectCreate(BaseModel):
     name: str = Field(..., description="Unique name of the project.")
     description: Optional[str] = Field(None, description="Brief description of the project.")
     
-    per_user_quota: Optional[int] = Field(180, ge=0, description="Maximum tasks a single agent can complete.")
-    reuse_count: Optional[int] = Field(0, ge=0, description="Number of times tasks/prompts can be reused.")
+    agent_quota: Optional[int] = Field(180, ge=0, description="Maximum tasks a single agent can complete.")
+    reuse_quota: Optional[int] = Field(0, ge=0, description="Number of times tasks/prompts can be reused.")
     
     agent_coin: Optional[int] = Field(0, ge=0, description="Coins awarded to agents per completed task.")
     reviewer_coin: Optional[int] = Field(0, ge=0, description="Coins awarded to reviewers per reviewed submission.")
@@ -63,7 +63,8 @@ class ProjectUpdate(BaseModel):
     reviewer_instructions: Optional[str] = None
     super_reviewer_instructions: Optional[str] = None
 
-    per_user_quota: Optional[int] = None
+    agent_quota: Optional[int] = None
+    reviewer_quota: Optional[int] = None
     reuse_count: Optional[int] = None
 
     review_parameters: Optional[List[str]] = None
@@ -209,10 +210,8 @@ class ProjectReviewerTasksResponse(BaseModel):
 
 
 
-
-
-
-
+class AddProjectReviewersRequest(BaseModel):
+    emails: List[str]
 
 
 

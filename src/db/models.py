@@ -69,7 +69,8 @@ class Project(SQLModel, table=True):
     num_redo: Optional[int] = Field(default=None)
 
     # quotas & reuse defaults
-    per_user_quota: int = Field(default=180)
+    agent_quota: int = Field(default=180, sa_column=Column(pg.INTEGER, nullable=False, server_default="100"))
+    reviewer_quota: int = Field(default=10, sa_column=Column(pg.INTEGER, nullable=False, server_default="10"))
     reuse_count: Optional[int] = Field(default=None)
 
     # default coin values (per-task)
@@ -104,6 +105,9 @@ class Project(SQLModel, table=True):
     prompts: List["Prompt"] = Relationship(back_populates="project")
     tasks: List["Task"] = Relationship(back_populates="project")
     allocations: List["ProjectAllocation"] = Relationship(back_populates="project")
+
+    # in Project
+    project_reviewers: List["ProjectReviewer"] = Relationship(back_populates="project")
 
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow, sa_column_kwargs={"onupdate": utcnow})
@@ -162,8 +166,14 @@ class User(SQLModel, table=True):
     audit_logs: List["AuditLog"] = Relationship(back_populates="user")
 
 
+    reviewer_projects: List["ProjectReviewer"] = Relationship(
+        back_populates="reviewer",
+        sa_relationship_kwargs={"foreign_keys": "[ProjectReviewer.reviewer_id]"},
+    )
+
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow, sa_column_kwargs={"onupdate": utcnow})
+
 
     @property
     def pending_reviews(self):
@@ -258,9 +268,34 @@ class ReviewerAllocation(SQLModel, table=True):
     # relationships
     submission: "Submission" = Relationship(back_populates="review_allocations")
     reviewer: User = Relationship(back_populates="reviewer_allocations")
-    # reviewer: User = Relationship(back_populates="reviews")
     
 
+class ProjectReviewer(SQLModel, table=True):
+    """
+    Links a reviewer to a project.
+    This represents the pool of reviewers available for that project.
+    """
+    id: Optional[str] = Field(
+        sa_column=Column(pg.VARCHAR, primary_key=True, default=generate_uuid)
+    )
+    project_id: str = Field(foreign_key="project.id", nullable=False)
+    reviewer_id: str = Field(foreign_key="user.id", nullable=False)
+    added_by: Optional[str] = Field(default=None, foreign_key="user.id")
+    active: bool = Field(default=True)
+
+    created_at: datetime = Field(default_factory=utcnow)
+    updated_at: datetime = Field(default_factory=utcnow, sa_column_kwargs={"onupdate": utcnow})
+
+    # relationships
+    project: Project = Relationship(back_populates="project_reviewers")
+    reviewer: User = Relationship(
+        back_populates="reviewer_projects",
+        sa_relationship_kwargs={"foreign_keys": "[ProjectReviewer.reviewer_id]"},
+    )
+
+    added_by_user: Optional[User] = Relationship(
+        sa_relationship_kwargs={"foreign_keys": "[ProjectReviewer.added_by]"},
+    )
 
 
 class Submission(SQLModel, table=True):
