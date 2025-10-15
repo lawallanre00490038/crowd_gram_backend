@@ -68,6 +68,8 @@ class Project(SQLModel, table=True):
     description: Optional[str] = None
     num_redo: Optional[int] = Field(default=None)
 
+    is_auto_review: Optional[bool] = Field(default=False)
+
     # quotas & reuse defaults
     agent_quota: int = Field(default=180, sa_column=Column(pg.INTEGER, nullable=False, server_default="100"))
     reviewer_quota: int = Field(default=10, sa_column=Column(pg.INTEGER, nullable=False, server_default="10"))

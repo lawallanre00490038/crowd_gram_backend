@@ -197,12 +197,16 @@ async def create_submission(
 
     # --- Construct SubmissionResponse ---
     project_id_resp = db_task_alloc.project.id if db_task_alloc.project else None
-    result_auto_assign = await auto_assign_reviewer(
-        project_id=project_id,
-        submission=submission,
-        session=session
-    )
-    print(f"result_auto_assign: {result_auto_assign}\n\n\n\n")
+    
+
+    if db_task_alloc.project.is_auto_review:
+        print("🔍 Auto-assigning submission to reviewer...")
+        result_auto_assign = await auto_assign_reviewer(
+            project_id=project_id,
+            submission=submission,
+            session=session
+        )
+        print(f"🔍 Auto-assign result: {result_auto_assign}")
 
     return SubmissionResponse(
         submission_id=submission.id,

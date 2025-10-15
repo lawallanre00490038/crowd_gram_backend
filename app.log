@@ -1721,3 +1721,30 @@ AttributeError: 'Submission' object has no attribute 'exec'
 2025-10-14 11:22:55,960 - INFO - 127.0.0.1:60819 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 8.84s
 2025-10-14 11:23:57,677 - INFO - 127.0.0.1:50271 - POST /api/v1/submission/projects/africa/agent - Status: [92m200[0m - Time: 12.19s
 2025-10-14 11:24:43,061 - INFO - 127.0.0.1:63998 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 5.30s
+2025-10-14 11:31:44,835 - INFO - 127.0.0.1:52632 - GET /api/v1/project/projects/by-email/lan@example.com - Status: [92m200[0m - Time: 5.81s
+2025-10-14 13:33:27,999 - INFO - 127.0.0.1:62511 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.03s
+2025-10-14 13:33:30,246 - INFO - 127.0.0.1:62511 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.49s
+2025-10-14 13:34:17,269 - INFO - 127.0.0.1:50959 - GET /api/v1/telegram/login - Status: [92m200[0m - Time: 6.82s
+2025-10-15 04:39:10,300 - INFO - 127.0.0.1:56393 - GET / - Status: [92m200[0m - Time: 0.00s
+2025-10-15 04:39:10,416 - INFO - 127.0.0.1:56393 - GET /favicon.ico - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-15 04:39:15,153 - INFO - 127.0.0.1:64332 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-15 04:39:25,635 - INFO - 127.0.0.1:65283 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-15 04:39:26,011 - INFO - 127.0.0.1:65283 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.17s
+2025-10-15 04:40:41,623 - INFO - 127.0.0.1:59274 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 8.30s
+2025-10-15 04:41:00,570 - INFO - 127.0.0.1:63504 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.36s
+2025-10-15 04:42:19,279 - INFO - 127.0.0.1:64150 - POST /api/v1/submission/projects/africa/agent - Status: [92m200[0m - Time: 10.13s
+2025-10-15 04:43:35,528 - INFO - 127.0.0.1:55251 - POST /api/v1/submission/projects/africa/agent - Status: [92m200[0m - Time: 7.21s
+2025-10-15 04:44:28,537 - INFO - 127.0.0.1:54303 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 4.41s
+2025-10-15 04:46:23,049 - INFO - 127.0.0.1:63187 - POST /api/v1/project/projects/africa/reviewers - Status: [92m200[0m - Time: 3.50s
+2025-10-15 04:46:45,830 - INFO - 127.0.0.1:58862 - GET /api/v1/project/project/africa/assigned-users - Status: [92m200[0m - Time: 2.19s
+2025-10-15 04:47:09,254 - INFO - 127.0.0.1:53378 - GET /api/v1/project/project/africa/assigned-users - Status: [92m200[0m - Time: 1.77s
+2025-10-15 04:47:47,455 - INFO - 127.0.0.1:55038 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [91m500[0m - Time: 1.81s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-15 04:51:07,205 - INFO - 127.0.0.1:63322 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [91m500[0m - Time: 1.55s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-15 04:51:27,878 - INFO - 127.0.0.1:51307 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [92m200[0m - Time: 7.11s
+2025-10-15 04:52:32,940 - INFO - 127.0.0.1:58384 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 5.67s
+2025-10-15 05:03:44,981 - ERROR - HTTPException: This submission is already assigned to the reviewer and not rejected at POST /api/v1/reviewer/assign_submission_to_reviewer/
+2025-10-15 05:03:44,991 - INFO - 127.0.0.1:56964 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [93m400[0m - Time: 5.39s - Reason: This submission is already assigned to the reviewer and not rejected
+2025-10-15 05:04:06,073 - ERROR - HTTPException: This submission 8b8649b9-05c9-4745-8776-a949abd3438f is already assigned to the reviewer lan@example.com and not rejected at POST /api/v1/reviewer/assign_submission_to_reviewer/
+2025-10-15 05:04:06,075 - INFO - 127.0.0.1:55067 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [93m400[0m - Time: 6.28s - Reason: This submission 8b8649b9-05c9-4745-8776-a949abd3438f is already assigned to the reviewer lan@example.com and not rejected
+2025-10-15 05:04:21,790 - ERROR - HTTPException: This submission 8b8649b9-05c9-4745-8776-a949abd3438f is already assigned to the reviewer lan@example.com and not rejected at POST /api/v1/reviewer/assign_submission_to_reviewer/
+2025-10-15 05:04:21,791 - INFO - 127.0.0.1:52495 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [93m400[0m - Time: 2.33s - Reason: This submission 8b8649b9-05c9-4745-8776-a949abd3438f is already assigned to the reviewer lan@example.com and not rejected

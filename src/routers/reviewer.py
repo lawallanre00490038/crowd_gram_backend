@@ -57,52 +57,49 @@ async def assign_submission_to_reviewer(
     Raises:
     - HTTPException 400: If the submission is already assigned to the reviewer.
     """
-     # 1️⃣ Resolve reviewer (by ID or email)
-    reviewer_query = select(User).where(
-        (User.id == reviewer_identifier) | (User.email == reviewer_identifier)
+    # 1️⃣ Resolve reviewer (by ID or email) with async-safe query
+    reviewer_result = await session.execute(
+        select(User).where(
+            (User.id == reviewer_identifier) | (User.email == reviewer_identifier)
+        )
     )
-    reviewer_result = await session.execute(reviewer_query)
     reviewer = reviewer_result.scalars().first()
     if not reviewer:
         raise HTTPException(status_code=404, detail="Reviewer not found")
+    reviewer_id = reviewer.id
 
-    reviewer_id = reviewer.id  # normalize to ID internally
-
-    # Check if submission exists
+    # 2️⃣ Load submission with its task to avoid lazy loading
     sub_result = await session.execute(
-        select(Submission).where(Submission.id == submission_id)
+        select(Submission)
+        .options(selectinload(Submission.task))  # eager load task
+        .where(Submission.id == submission_id)
     )
     submission = sub_result.scalar_one_or_none()
     if not submission:
         raise HTTPException(status_code=404, detail="Submission not found")
+
+    # Check project association
     if not submission.task or submission.task.project_id != project_id:
         raise HTTPException(status_code=400, detail="Submission does not belong to this project")
 
-
-    # Check if reviewer exists
-    reviewer_result = await session.execute(
-        select(User).where(User.id == reviewer_id)
-    )
-    reviewer = reviewer_result.scalar_one_or_none()
-    if not reviewer:
-        raise HTTPException(status_code=404, detail="Reviewer not found")
-
-    # Check if assignment already exists and is not rejected
+    # 3️⃣ Check if assignment already exists and is not rejected
     existing_result = await session.execute(
-        select(ReviewerAllocation).where(
+        select(ReviewerAllocation)
+        .options(selectinload(ReviewerAllocation.reviewer))
+        .where(
             ReviewerAllocation.submission_id == submission_id,
-            ReviewerAllocation.reviewer_id == reviewer_id,
-            ReviewerAllocation.status != Status.rejected  # allow re-review only if rejected
+            # ReviewerAllocation.reviewer_id == reviewer_id,
+            ReviewerAllocation.status != Status.rejected
         )
     )
     existing = existing_result.scalars().first()
     if existing:
         raise HTTPException(
             status_code=400,
-            detail="This submission is already assigned to the reviewer and not rejected"
+            detail=f"This submission {submission_id} is already assigned to the reviewer {existing.reviewer.email} and not rejected"
         )
 
-    # Create new allocation
+    # 4️⃣ Create new allocation
     allocation = ReviewerAllocation(
         submission_id=submission_id,
         reviewer_id=reviewer_id,
@@ -112,6 +109,7 @@ async def assign_submission_to_reviewer(
     session.add(allocation)
     await session.commit()
     await session.refresh(allocation)
+
     return allocation
 
 
