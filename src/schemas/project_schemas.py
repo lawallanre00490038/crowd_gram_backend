@@ -1,4 +1,5 @@
 from datetime import datetime
+from operator import is_
 from pydantic import BaseModel
 from typing import List, Optional
 from typing import List, Optional
@@ -13,9 +14,19 @@ class ProjectCreate(BaseModel):
     id: Optional[str] = Field(None, description="Optional UUID for the project. Auto-generated if not provided.")
     name: str = Field(..., description="Unique name of the project.")
     description: Optional[str] = Field(None, description="Brief description of the project.")
+
+    num_redo: Optional[int] = Field(None, description="Number of times a submission can be redone.")
     
     agent_quota: Optional[int] = Field(180, ge=0, description="Maximum tasks a single agent can complete.")
-    reuse_quota: Optional[int] = Field(0, ge=0, description="Number of times tasks/prompts can be reused.")
+    reviewer_quota: Optional[int] = Field(180, ge=0, description="Maximum tasks a single reviewer can review.")
+    reuse_count: Optional[int] = Field(1, ge=0, description="Number of times a prompt can be reused in the project.")
+
+    agent_instructions: Optional[str] = Field(None, description="Instructions for agents on how to complete tasks.")
+    reviewer_instructions: Optional[str] = Field(None, description="Instructions for reviewers on how to review tasks.")
+    super_reviewer_instructions: Optional[str] = Field(None, description="Instructions for super reviewers on how to review tasks.")
+
+    is_auto_review: Optional[bool] = Field(False, description="Whether to automatically review submissions.")
+
     
     agent_coin: Optional[int] = Field(0, ge=0, description="Coins awarded to agents per completed task.")
     reviewer_coin: Optional[int] = Field(0, ge=0, description="Coins awarded to reviewers per reviewed submission.")
@@ -50,7 +61,8 @@ class ProjectUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     is_public: Optional[bool] = None
-
+    num_redo: Optional[int] = None
+    
     is_auto_review: Optional[bool] = False
 
     agent_coin: Optional[float] = None
