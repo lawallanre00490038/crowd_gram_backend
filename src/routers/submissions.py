@@ -199,7 +199,7 @@ async def create_submission(
     project_id_resp = db_task_alloc.project.id if db_task_alloc.project else None
     
 
-    if db_task_alloc.project.is_auto_review:
+    if bool(db_task_alloc.project.is_auto_review):
         print("🔍 Auto-assigning submission to reviewer...")
         result_auto_assign = await auto_assign_reviewer(
             project_id=project_id,

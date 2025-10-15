@@ -51,6 +51,8 @@ class ProjectUpdate(BaseModel):
     description: Optional[str] = None
     is_public: Optional[bool] = None
 
+    is_auto_review: Optional[bool] = False
+
     agent_coin: Optional[float] = None
     reviewer_coin: Optional[float] = None
     super_reviewer_coin: Optional[float] = None

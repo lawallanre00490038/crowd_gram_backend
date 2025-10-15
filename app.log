@@ -1748,3 +1748,12 @@ AttributeError: 'Submission' object has no attribute 'exec'
 2025-10-15 05:04:06,075 - INFO - 127.0.0.1:55067 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [93m400[0m - Time: 6.28s - Reason: This submission 8b8649b9-05c9-4745-8776-a949abd3438f is already assigned to the reviewer lan@example.com and not rejected
 2025-10-15 05:04:21,790 - ERROR - HTTPException: This submission 8b8649b9-05c9-4745-8776-a949abd3438f is already assigned to the reviewer lan@example.com and not rejected at POST /api/v1/reviewer/assign_submission_to_reviewer/
 2025-10-15 05:04:21,791 - INFO - 127.0.0.1:52495 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [93m400[0m - Time: 2.33s - Reason: This submission 8b8649b9-05c9-4745-8776-a949abd3438f is already assigned to the reviewer lan@example.com and not rejected
+2025-10-15 05:11:01,063 - INFO - 127.0.0.1:60677 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-15 05:11:01,403 - INFO - 127.0.0.1:60677 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.15s
+2025-10-15 05:11:14,114 - INFO - 127.0.0.1:62538 - GET /api/v1/project/list/projects - Status: [92m200[0m - Time: 1.98s
+2025-10-15 05:11:56,232 - INFO - 127.0.0.1:54226 - POST /api/v1/project/get/project - Status: [92m200[0m - Time: 2.11s
+2025-10-15 05:13:45,107 - INFO - 127.0.0.1:53414 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-15 05:13:57,025 - INFO - 127.0.0.1:57100 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.07s
+2025-10-15 05:14:43,765 - INFO - 127.0.0.1:55626 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-15 05:14:55,080 - INFO - 127.0.0.1:54194 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.05s
+2025-10-15 05:15:32,997 - INFO - 127.0.0.1:57221 - PATCH /api/v1/project/update/project/africa - Status: [92m200[0m - Time: 3.97s
