@@ -1,20 +1,29 @@
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import JWTError, jwt
 import jwt, os
+import logging
+
+
 from src.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+logger = logging.getLogger(__name__)
+
+
+pwd_context = CryptContext(schemes=["bcrypt"])
 
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+def generate_passwd_hash(password: str) -> str:
+    hash = pwd_context.hash(password)
+    return hash
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(password: str, hash: str) -> bool:
+    return pwd_context.verify(password, hash)
 
-def get_password_hash(password):
+def get_password_hash(password: str):
     return pwd_context.hash(password)
+
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -30,7 +39,8 @@ def decode_access_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload
-    except JWTError:
+    except jwt.PyJWTError as e:
+        logging.exception(e)
         return None
 
 

@@ -7,9 +7,12 @@ aiobotocore
 openpyxl
 pandas
 python-multipart
-passlib[bcrypt] 
-python-jose[cryptography]
-jwt
 pydantic[email]
 asyncpg
 colorlog
+
+
+
+passlib
+bcrypt==4.0.1
+PyJWT
