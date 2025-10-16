@@ -1757,3 +1757,16 @@ AttributeError: 'Submission' object has no attribute 'exec'
 2025-10-15 05:14:43,765 - INFO - 127.0.0.1:55626 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
 2025-10-15 05:14:55,080 - INFO - 127.0.0.1:54194 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.05s
 2025-10-15 05:15:32,997 - INFO - 127.0.0.1:57221 - PATCH /api/v1/project/update/project/africa - Status: [92m200[0m - Time: 3.97s
+2025-10-16 10:28:54,988 - INFO - 127.0.0.1:51290 - GET / - Status: [92m200[0m - Time: 0.00s
+2025-10-16 10:28:55,217 - INFO - 127.0.0.1:51290 - GET /favicon.ico - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-16 10:29:00,903 - INFO - 127.0.0.1:53646 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-16 10:29:02,753 - INFO - 127.0.0.1:60186 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.23s
+2025-10-16 10:29:16,401 - INFO - 127.0.0.1:56542 - GET /api/v1/project/list/projects - Status: [92m200[0m - Time: 2.33s
+2025-10-16 10:29:47,568 - ERROR - HTTPException: Project name already exists at POST /api/v1/project/create/project
+2025-10-16 10:29:47,572 - INFO - 127.0.0.1:50790 - POST /api/v1/project/create/project - Status: [93m400[0m - Time: 1.69s - Reason: Project name already exists
+2025-10-16 10:30:04,974 - ERROR - HTTPException: Project name already exists at POST /api/v1/project/create/project
+2025-10-16 10:30:04,979 - INFO - 127.0.0.1:58654 - POST /api/v1/project/create/project - Status: [93m400[0m - Time: 1.41s - Reason: Project name already exists
+2025-10-16 10:30:21,977 - INFO - 127.0.0.1:58722 - POST /api/v1/project/create/project - Status: [92m200[0m - Time: 3.73s
+2025-10-16 10:31:22,725 - INFO - 127.0.0.1:49667 - POST /api/v1/user/create - Status: [91m500[0m - Time: 4.74s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-16 10:32:29,972 - INFO - 127.0.0.1:65097 - POST /api/v1/user/create - Status: [92m200[0m - Time: 4.22s
+2025-10-16 10:33:09,192 - INFO - 127.0.0.1:63552 - POST /api/v1/user/create - Status: [92m200[0m - Time: 4.45s
