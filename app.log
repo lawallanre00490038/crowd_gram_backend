@@ -4195,3 +4195,150 @@ DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not prese
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 2025-10-17 13:19:14,421 - INFO - 127.0.0.1:56375 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [93m400[0m - Time: 7.44s - Reason: Database error occurred
+2025-10-17 13:26:18,202 - INFO - 127.0.0.1:52659 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 9.95s
+2025-10-17 13:26:56,671 - ERROR - HTTPException: Status must be one of: ['pending', 'accepted', 'rejected', 'redo', 'rejected', 'submitted', 'assigned'] at GET /api/v1/project/africa/tasks/detailed
+2025-10-17 13:26:56,673 - INFO - 127.0.0.1:64512 - GET /api/v1/project/africa/tasks/detailed - Status: [93m400[0m - Time: 1.35s - Reason: Status must be one of: ['pending', 'accepted', 'rejected', 'redo', 'rejected', 'submitted', 'assigned']
+2025-10-17 13:27:15,321 - INFO - 127.0.0.1:53760 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.75s
+2025-10-17 13:28:52,901 - INFO - 127.0.0.1:49900 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 5.02s
+2025-10-17 14:19:29,014 - ERROR - Database integrity error at POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+[SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
+[parameters: ('bb8c3281-12c0-46da-9813-0cc1331e2f94', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '30f8093c-0883-470e-b17a-ee392efaa263', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 13, 19, 28, 365002), datetime.datetime(2025, 10, 17, 13, 19, 28, 365002))]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-10-17 14:19:29,030 - ERROR - Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 550, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 176, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 267, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 256, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg\\protocol\\protocol.pyx", line 206, in bind_execute
+asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 392, in review_submission
+    await award_reviewer_payment(session, reviewer_id, submission.id)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\services\coins.py", line 103, in award_reviewer_payment
+    await session.commit()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 1000, in commit
+    await greenlet_spawn(self.sync_session.commit)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1311, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1286, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4331, in flush
+    self._flush(objects)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4466, in _flush
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4427, in _flush
+    flush_context.execute()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+[SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
+[parameters: ('bb8c3281-12c0-46da-9813-0cc1331e2f94', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '30f8093c-0883-470e-b17a-ee392efaa263', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 13, 19, 28, 365002), datetime.datetime(2025, 10, 17, 13, 19, 28, 365002))]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+2025-10-17 14:19:29,031 - INFO - 127.0.0.1:63305 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [93m400[0m - Time: 12.10s - Reason: Database error occurred
+2025-10-17 14:35:13,880 - INFO - 127.0.0.1:64615 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [92m200[0m - Time: 15.17s

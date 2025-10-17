@@ -367,7 +367,16 @@ class CoinPayment(SQLModel, table=True):
     id: Optional[str] = Field(sa_column=Column(pg.VARCHAR, primary_key=True, default=generate_uuid))
     user_id: str = Field(foreign_key="user.id")
     task_id: Optional[str] = Field(foreign_key="task.id")
-    assignment_id: Optional[str] = Field(foreign_key="projectallocation.id")
+
+    # assignment_id: Optional[str] = Field(foreign_key="projectallocation.id")
+
+    project_allocation_id: Optional[str] = Field(
+        default=None, foreign_key="projectallocation.id"
+    )
+    reviewer_allocation_id: Optional[str] = Field(
+        default=None, foreign_key="reviewerallocation.id"
+    )
+
     project_id: Optional[str] = Field(foreign_key="project.id")
 
     coins_earned: float
@@ -375,6 +384,8 @@ class CoinPayment(SQLModel, table=True):
 
     user: User = Relationship(back_populates="coins_earned")
     task: Optional[Task] = Relationship(back_populates="coin_payments")
+    project_allocation: Optional["ProjectAllocation"] = Relationship()
+    reviewer_allocation: Optional["ReviewerAllocation"] = Relationship()
 
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow, sa_column_kwargs={"onupdate": utcnow})

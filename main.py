@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from src.db import events
 
 import os
 from src.errors import register_all_errors

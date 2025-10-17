@@ -141,7 +141,6 @@ async def get_contributor_stats(
 
 
 # ------------------- REVIEWER STATS -------------------
-# ------------------- REVIEWER STATS (Corrected) -------------------
 async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime = None, end: datetime = None):
     """Return stats for a reviewer (looked up by email)."""
 
