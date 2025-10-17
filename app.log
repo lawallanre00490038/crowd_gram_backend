@@ -3191,3 +3191,1007 @@ TimeoutError
 2025-10-17 11:05:50,045 - INFO - 127.0.0.1:54047 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.73s
 2025-10-17 11:06:03,743 - INFO - 127.0.0.1:63936 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.58s
 2025-10-17 11:15:25,449 - INFO - 127.0.0.1:62099 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 10.66s
+2025-10-17 11:32:45,902 - INFO - 127.0.0.1:51852 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-17 11:32:46,517 - INFO - 127.0.0.1:51852 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.49s
+2025-10-17 11:33:34,306 - ERROR - Unhandled error for GET /api/v1/project/africa/tasks/detailed
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 151, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\projects.py", line 362, in list_project_tasks_by_role
+    user_result = await session.execute(select(User).where(User.email == email))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1345, in _checkout
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1342, in _checkout
+    fairy._connection_record.get_connection()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 836, in get_connection
+    self.__connect()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 899, in __connect
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 895, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 661, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 629, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 818, in _create_ssl_connection
+    new_tr = await loop.start_tls(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1304, in start_tls
+    await waiter
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+ConnectionResetError
+2025-10-17 11:33:34,362 - ERROR - Unhandled exception at GET /api/v1/project/africa/tasks/detailed: 
+2025-10-17 11:33:34,410 - ERROR -   + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 79, in collapse_excgroups
+  |     yield
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 183, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 781, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 182, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |   File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    |     self.gen.throw(value)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 184, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 108, in log_requests
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    |     raise app_exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\projects.py", line 362, in list_project_tasks_by_role
+    |     user_result = await session.execute(select(User).where(User.email == email))
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    |     result = await greenlet_spawn(
+    |              ^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    |     result = context.throw(*sys.exc_info())
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    |     return self._execute_internal(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    |     conn = self._connection_for_bind(bind)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    |     return trans._connection_for_bind(engine, execution_options)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "<string>", line 2, in _connection_for_bind
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    |     ret_value = fn(self, *arg, **kw)
+    |                 ^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    |     conn = bind.connect()
+    |            ^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    |     return self._connection_cls(self)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    |     self._dbapi_connection = engine.raw_connection()
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    |     return self.pool.connect()
+    |            ^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    |     return _ConnectionFairy._checkout(self)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1345, in _checkout
+    |     with util.safe_reraise():
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    |     raise exc_value.with_traceback(exc_tb)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1342, in _checkout
+    |     fairy._connection_record.get_connection()
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 836, in get_connection
+    |     self.__connect()
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 899, in __connect
+    |     with util.safe_reraise():
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    |     raise exc_value.with_traceback(exc_tb)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 895, in __connect
+    |     self.dbapi_connection = connection = pool._invoke_creator(self)
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 661, in connect
+    |     return dialect.connect(*cargs, **cparams)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 629, in connect
+    |     return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    |     await_only(creator_fn(*arg, **kw)),
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    |     return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    |     value = await result
+    |             ^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    |     return await connect_utils._connect(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    |     raise last_error or exceptions.TargetServerAttributeNotMatched(
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    |     conn = await _connect_addr(
+    |            ^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    |     return await __connect_addr(params, True, *args)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    |     tr, pr = await connector
+    |              ^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 818, in _create_ssl_connection
+    |     new_tr = await loop.start_tls(
+    |              ^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1304, in start_tls
+    |     await waiter
+    |   File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    |     raise handshake_exc
+    | ConnectionResetError
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 182, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 184, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 108, in log_requests
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\projects.py", line 362, in list_project_tasks_by_role
+    user_result = await session.execute(select(User).where(User.email == email))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1345, in _checkout
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1342, in _checkout
+    fairy._connection_record.get_connection()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 836, in get_connection
+    self.__connect()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 899, in __connect
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 895, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 661, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 629, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1075, in _connect
+    raise last_error or exceptions.TargetServerAttributeNotMatched(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 886, in _connect_addr
+    return await __connect_addr(params, True, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 931, in __connect_addr
+    tr, pr = await connector
+             ^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 818, in _create_ssl_connection
+    new_tr = await loop.start_tls(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 1304, in start_tls
+    await waiter
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\sslproto.py", line 578, in _on_handshake_complete
+    raise handshake_exc
+ConnectionResetError
+
+2025-10-17 11:37:16,296 - ERROR - Unhandled error for GET /api/v1/project/africa/tasks/detailed
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 891, in _connect_addr
+    return await __connect_addr(params_retry, False, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 934, in __connect_addr
+    await connected
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\projects.py", line 362, in list_project_tasks_by_role
+    user_result = await session.execute(select(User).where(User.email == email))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1264, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 716, in checkout
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 714, in checkout
+    dbapi_connection = rec.get_connection()
+                       ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 836, in get_connection
+    self.__connect()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 899, in __connect
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 895, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 661, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 629, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connection.py", line 2420, in connect
+    async with compat.timeout(timeout):
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+2025-10-17 11:37:16,309 - ERROR - Unhandled exception at GET /api/v1/project/africa/tasks/detailed: 
+2025-10-17 11:37:16,312 - ERROR - Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connection.py", line 2421, in connect
+    return await connect_utils._connect(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 1049, in _connect
+    conn = await _connect_addr(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 891, in _connect_addr
+    return await __connect_addr(params_retry, False, *args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connect_utils.py", line 934, in __connect_addr
+    await connected
+asyncio.exceptions.CancelledError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 182, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 184, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 108, in log_requests
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\projects.py", line 362, in list_project_tasks_by_role
+    user_result = await session.execute(select(User).where(User.email == email))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 449, in execute
+    result = await greenlet_spawn(
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 201, in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2239, in _execute_internal
+    conn = self._connection_for_bind(bind)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2108, in _connection_for_bind
+    return trans._connection_for_bind(engine, execution_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in _connection_for_bind
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1187, in _connection_for_bind
+    conn = bind.connect()
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3277, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 143, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 3301, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 447, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 1264, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 716, in checkout
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 714, in checkout
+    dbapi_connection = rec.get_connection()
+                       ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 836, in get_connection
+    self.__connect()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 899, in __connect
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\pool\base.py", line 895, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\create.py", line 661, in connect
+    return dialect.connect(*cargs, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 629, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\connection.py", line 2420, in connect
+    async with compat.timeout(timeout):
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\asyncio\timeouts.py", line 115, in __aexit__
+    raise TimeoutError from exc_val
+TimeoutError
+
+2025-10-17 13:08:38,466 - INFO - 127.0.0.1:62896 - GET / - Status: [92m200[0m - Time: 0.00s
+2025-10-17 13:08:42,727 - INFO - 127.0.0.1:62896 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-17 13:08:44,197 - INFO - 127.0.0.1:62896 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 1.13s
+2025-10-17 13:09:24,819 - ERROR - HTTPException: Status must be one of: ['pending', 'accepted', 'rejected', 'redo', 'rejected', 'submitted'] at GET /api/v1/project/africa/tasks/detailed
+2025-10-17 13:09:24,820 - INFO - 127.0.0.1:61734 - GET /api/v1/project/africa/tasks/detailed - Status: [93m400[0m - Time: 3.19s - Reason: Status must be one of: ['pending', 'accepted', 'rejected', 'redo', 'rejected', 'submitted']
+2025-10-17 13:10:58,578 - INFO - 127.0.0.1:59985 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 10.50s
+2025-10-17 13:11:39,084 - INFO - 127.0.0.1:54361 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.51s
+2025-10-17 13:12:57,802 - INFO - 127.0.0.1:63653 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 10.23s
+2025-10-17 13:13:18,622 - INFO - 127.0.0.1:62968 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 13.36s
+2025-10-17 13:13:54,975 - INFO - 127.0.0.1:52394 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 8.42s
+2025-10-17 13:18:27,303 - ERROR - Database integrity error at POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+[SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
+[parameters: ('4519e1d4-f573-4e1b-8513-1f255318cee8', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 18, 26, 886937), datetime.datetime(2025, 10, 17, 12, 18, 26, 886937))]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-10-17 13:18:27,348 - ERROR - Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 550, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 176, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 267, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 256, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg\\protocol\\protocol.pyx", line 206, in bind_execute
+asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 392, in review_submission
+    await award_reviewer_payment(session, reviewer_id, submission.id)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\services\coins.py", line 91, in award_reviewer_payment
+    await session.commit()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 1000, in commit
+    await greenlet_spawn(self.sync_session.commit)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1311, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1286, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4331, in flush
+    self._flush(objects)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4466, in _flush
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4427, in _flush
+    flush_context.execute()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+[SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
+[parameters: ('4519e1d4-f573-4e1b-8513-1f255318cee8', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 18, 26, 886937), datetime.datetime(2025, 10, 17, 12, 18, 26, 886937))]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+2025-10-17 13:18:27,355 - INFO - 127.0.0.1:54203 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [93m400[0m - Time: 14.21s - Reason: Database error occurred
+2025-10-17 13:19:14,346 - ERROR - Database integrity error at POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+[SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
+[parameters: ('017e2f80-f918-4d4b-b2f5-ff6e1b0bcd28', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 19, 13, 409460), datetime.datetime(2025, 10, 17, 12, 19, 13, 409460))]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-10-17 13:19:14,414 - ERROR - Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 550, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 176, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 267, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\asyncpg\prepared_stmt.py", line 256, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg\\protocol\\protocol.pyx", line 206, in bind_execute
+asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 392, in review_submission
+    await award_reviewer_payment(session, reviewer_id, submission.id)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\services\coins.py", line 91, in award_reviewer_payment
+    await session.commit()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py", line 1000, in commit
+    await greenlet_spawn(self.sync_session.commit)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 2030, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1311, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 137, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1286, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4331, in flush
+    self._flush(objects)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4466, in _flush
+    with util.safe_reraise():
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4427, in _flush
+    flush_context.execute()
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 585, in execute
+    self._adapt_connection.await_(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 563, in _prepare_and_execute
+    self._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 513, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+[SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
+[parameters: ('017e2f80-f918-4d4b-b2f5-ff6e1b0bcd28', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 19, 13, 409460), datetime.datetime(2025, 10, 17, 12, 19, 13, 409460))]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+2025-10-17 13:19:14,421 - INFO - 127.0.0.1:56375 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [93m400[0m - Time: 7.44s - Reason: Database error occurred

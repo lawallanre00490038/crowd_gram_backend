@@ -30,7 +30,15 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 
-ALLOWED_STATUSES = [Status.pending, Status.accepted, Status.rejected, Status.redo, Status.rejected, Status.submitted]
+ALLOWED_STATUSES = [
+    Status.pending, 
+    Status.accepted, 
+    Status.rejected, 
+    Status.redo, 
+    Status.rejected, 
+    Status.submitted,
+    Status.assigned
+]
 router = APIRouter()
 
 
