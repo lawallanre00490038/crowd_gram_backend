@@ -403,66 +403,6 @@ async def review_submission(
 
 
 
-# @router.patch("/update/{submission_id}/review", response_model=Submission)
-# async def reviewer_review_submission(
-#     project_id: str,
-#     submission_id: str,
-#     status: Status = Query(Status.pending, description="Status of review"),
-#     session: AsyncSession = Depends(get_session),
-# ):
-#     """
-#     Reviewer endpoint: approve/reject submissions.
-#     - Allowed statuses: accepted, rejected, redo, or pending.
-#     - Triggers coin award if accepted.
-#     """
-
-#     if status not in ALLOWED_STATUSES:
-#         raise HTTPException(
-#             status_code=400,
-#             detail="Reviewer can only set status to accepted, rejected, redo, or pending",
-#         )
-
-#     # ✅ Preload related Task and Assignment to avoid lazy loading
-#     result = await session.execute(
-#         select(Submission)
-#         .where(Submission.id == submission_id)
-#         .options(
-#             selectinload(Submission.task),
-#             selectinload(Submission.assignment),
-#         )
-#     )
-#     submission = result.scalars().first()
-
-#     if not submission:
-#         raise HTTPException(status_code=404, detail="Submission not found")
-
-#     # ✅ Ensure task is loaded before accessing project_id
-#     if not submission.task:
-#         raise HTTPException(status_code=400, detail="Submission is missing associated task")
-
-#     if submission.task.project_id != project_id:
-#         raise HTTPException(status_code=400, detail="Submission does not belong to this project")
-
-#     # Update status
-#     submission.status = status
-
-#     # Propagate to allocation if exists
-#     if submission.assignment:
-#         alloc = submission.assignment
-#         alloc.status = submission.status
-#         alloc.completed_at = datetime.utcnow()
-#         session.add(alloc)
-
-#     # Trigger coin award if accepted
-#     if status == Status.accepted:
-#         await award_coins_on_accept(session, submission)
-
-#     session.add(submission)
-#     await session.commit()
-#     await session.refresh(submission)
-
-#     return submission
-
 @router.patch("/update/{submission_id}/review", response_model=Submission)
 async def reviewer_review_submission(
     project_id: str,

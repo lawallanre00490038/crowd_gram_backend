@@ -4,10 +4,10 @@ from fastapi import HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from sqlmodel import select, func
+from datetime import datetime
 
 from src.db.models import (
     Project,
-    User,
     Status,
     ReviewerAllocation,
     Submission,
@@ -87,6 +87,7 @@ async def auto_assign_reviewer(
         submission_id=submission.id,
         reviewer_id=selected_reviewer.id,
         status=Status.pending,
+        assigned_at=datetime.utcnow()
     )
     session.add(review_alloc)
     await session.commit()

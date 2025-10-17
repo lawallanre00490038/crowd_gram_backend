@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from sqlmodel import SQLModel
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,8 +32,6 @@ async def lifespan(app: FastAPI):
 
     await create_tables()
     yield
-
-
 
 
 
