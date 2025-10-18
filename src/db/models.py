@@ -106,7 +106,7 @@ class Project(SQLModel, table=True):
     # relationships
     prompts: List["Prompt"] = Relationship(back_populates="project")
     tasks: List["Task"] = Relationship(back_populates="project")
-    allocations: List["ProjectAllocation"] = Relationship(back_populates="project")
+    allocations: List["AgentAllocation"] = Relationship(back_populates="project")
 
     # in Project
     project_reviewers: List["ProjectReviewer"] = Relationship(back_populates="project")
@@ -160,7 +160,7 @@ class User(SQLModel, table=True):
     telegram_id: Optional[str] = None
 
     # relationships
-    tasks_assigned: List["ProjectAllocation"] = Relationship(back_populates="user")
+    tasks_assigned: List["AgentAllocation"] = Relationship(back_populates="user")
     reviewer_allocations: List["ReviewerAllocation"] = Relationship(back_populates="reviewer")
     submissions: List["Submission"] = Relationship(back_populates="user")
     reviews: List["Review"] = Relationship(back_populates="reviewer")
@@ -185,7 +185,7 @@ class User(SQLModel, table=True):
 
 class Task(SQLModel, table=True):
     """
-    Task = an assignment generated from a Prompt and Project.
+    Task = an allocation generated from a Prompt and Project.
     Usually one Task corresponds to one Prompt being allocated to someone (but remains a separate entity).
     """
     id: Optional[str] = Field(sa_column=Column(pg.VARCHAR, primary_key=True, default=generate_uuid))
@@ -209,14 +209,14 @@ class Task(SQLModel, table=True):
      # relationships
     project: Project = Relationship(back_populates="tasks")
     prompt: Optional[Prompt] = Relationship(back_populates="tasks")
-    allocations: List["ProjectAllocation"] = Relationship(back_populates="task")
+    allocations: List["AgentAllocation"] = Relationship(back_populates="task")
     submissions: List["Submission"] = Relationship(back_populates="task")
     coin_payments: List["CoinPayment"] = Relationship(back_populates="task")
 
 
-    assignments: List["ProjectAllocation"] = Relationship(back_populates="task")
+    assignments: List["AgentAllocation"] = Relationship(back_populates="task")
     # read-only alias (if you want to keep the name `assignments`)
-    # assignments: List["ProjectAllocation"] = Relationship(
+    # assignments: List["AgentAllocation"] = Relationship(
     #     back_populates="task",
     #     viewonly=True,  # prevents writes, resolves conflict
     #     overlaps="allocations"
@@ -231,10 +231,10 @@ class Task(SQLModel, table=True):
 
 
 
-class ProjectAllocation(SQLModel, table=True):
+class AgentAllocation(SQLModel, table=True):
     """
-    A single assignment of a Task (prompt) to a User.
-    A ProjectAllocation can have one Submission.
+    A single allocation of a Task (prompt) to a User.
+    A AgentAllocation can have one Submission.
     """
     id: Optional[str] = Field(sa_column=Column(pg.VARCHAR, primary_key=True, default=generate_uuid))
     project_id: str = Field(foreign_key="project.id")
@@ -253,7 +253,7 @@ class ProjectAllocation(SQLModel, table=True):
     user: Optional[User] = Relationship(back_populates="tasks_assigned")
     
     # This relationship links to the Submission that references this allocation.
-    submission: Optional["Submission"] = Relationship(back_populates="assignment")
+    submission: Optional["Submission"] = Relationship(back_populates="allocation")
 
     created_at: datetime = Field(default_factory=utcnow)
     updated_at: datetime = Field(default_factory=utcnow, sa_column_kwargs={"onupdate": utcnow})
@@ -302,12 +302,12 @@ class ProjectReviewer(SQLModel, table=True):
 
 class Submission(SQLModel, table=True):
     """
-    Unified Submission model. Each submission is linked to a single ProjectAllocation.
+    Unified Submission model. Each submission is linked to a single AgentAllocation.
     """
     id: Optional[str] = Field(sa_column=Column(pg.VARCHAR, primary_key=True, default=generate_uuid))
     task_id: str = Field(foreign_key="task.id")
     # This foreign key establishes the "many-to-one" side of the relationship.
-    assignment_id: Optional[str] = Field(default=None, foreign_key="projectallocation.id")
+    assignment_id: Optional[str] = Field(default=None, foreign_key="agentallocation.id")
     user_id: str = Field(foreign_key="user.id")
 
     type: TaskType = Field(default=TaskType.audio)
@@ -324,8 +324,8 @@ class Submission(SQLModel, table=True):
     # relationships
     task: Task = Relationship(back_populates="submissions")
     
-    # This relationship links back to the ProjectAllocation.
-    assignment: Optional[ProjectAllocation] = Relationship(back_populates="submission")
+    # This relationship links back to the AgentAllocation.
+    allocation: Optional[AgentAllocation] = Relationship(back_populates="submission")
     review_allocations: list["ReviewerAllocation"] = Relationship(back_populates="submission")
 
     
@@ -368,10 +368,10 @@ class CoinPayment(SQLModel, table=True):
     user_id: str = Field(foreign_key="user.id")
     task_id: Optional[str] = Field(foreign_key="task.id")
 
-    # assignment_id: Optional[str] = Field(foreign_key="projectallocation.id")
+    # assignment_id: Optional[str] = Field(foreign_key="agentallocation.id")
 
-    project_allocation_id: Optional[str] = Field(
-        default=None, foreign_key="projectallocation.id"
+    agent_allocation_id: Optional[str] = Field(
+        default=None, foreign_key="agentallocation.id"
     )
     reviewer_allocation_id: Optional[str] = Field(
         default=None, foreign_key="reviewerallocation.id"
@@ -384,7 +384,7 @@ class CoinPayment(SQLModel, table=True):
 
     user: User = Relationship(back_populates="coins_earned")
     task: Optional[Task] = Relationship(back_populates="coin_payments")
-    project_allocation: Optional["ProjectAllocation"] = Relationship()
+    agent_allocation: Optional["AgentAllocation"] = Relationship()
     reviewer_allocation: Optional["ReviewerAllocation"] = Relationship()
 
     created_at: datetime = Field(default_factory=utcnow)

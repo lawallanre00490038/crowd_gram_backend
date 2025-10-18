@@ -2,7 +2,7 @@ from email import message
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import select
-from src.db.models import User, CoinPayment, Role, ProjectAllocation, Submission, Review, Status
+from src.db.models import User, CoinPayment, Role, AgentAllocation, Submission, Review, Status
 from src.db.database import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.utils.auth import get_password_hash, verify_password
@@ -130,7 +130,7 @@ async def get_telegram_status(email: str, session: AsyncSession = Depends(get_se
 
     if user.role == Role.agent:
         assigned_tasks_result = await session.execute(
-            select(ProjectAllocation).where(ProjectAllocation.user_id == user.id)
+            select(AgentAllocation).where(AgentAllocation.user_id == user.id)
         )
         assigned_tasks = assigned_tasks_result.scalars().all()
 

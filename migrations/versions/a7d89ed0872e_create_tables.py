@@ -109,7 +109,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['prompt_id'], ['prompt.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('projectallocation',
+    op.create_table('agentallocation',
     sa.Column('id', sa.VARCHAR(), nullable=False),
     sa.Column('project_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('task_id', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
@@ -136,7 +136,7 @@ def upgrade() -> None:
     sa.Column('approved', sa.Boolean(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['assignment_id'], ['projectallocation.id'], ),
+    sa.ForeignKeyConstraint(['assignment_id'], ['agentallocation.id'], ),
     sa.ForeignKeyConstraint(['project_id'], ['project.id'], ),
     sa.ForeignKeyConstraint(['task_id'], ['task.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
@@ -155,7 +155,7 @@ def upgrade() -> None:
     sa.Column('meta', postgresql.JSON(astext_type=sa.Text()), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
-    sa.ForeignKeyConstraint(['assignment_id'], ['projectallocation.id'], ),
+    sa.ForeignKeyConstraint(['assignment_id'], ['agentallocation.id'], ),
     sa.ForeignKeyConstraint(['task_id'], ['task.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -196,7 +196,7 @@ def downgrade() -> None:
     op.drop_table('review')
     op.drop_table('submission')
     op.drop_table('coinpayment')
-    op.drop_table('projectallocation')
+    op.drop_table('agentallocation')
     op.drop_table('task')
     op.drop_table('prompt')
     op.drop_table('auditlog')

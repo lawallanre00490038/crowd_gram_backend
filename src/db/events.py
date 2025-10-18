@@ -1,10 +1,10 @@
 from sqlalchemy import event, update, select
-from src.db.models import ReviewerAllocation, Submission, ProjectAllocation, Task
+from src.db.models import ReviewerAllocation, Submission, AgentAllocation, Task
 
 
 def _cascade_status(connection, submission_id: str, new_status: str):
     """
-    Helper to cascade status to Submission, ProjectAllocation, and Task.
+    Helper to cascade status to Submission, AgentAllocation, and Task.
     """
     # 1️⃣ Update Submission
     connection.execute(
@@ -13,7 +13,7 @@ def _cascade_status(connection, submission_id: str, new_status: str):
         .values(status=new_status)
     )
 
-    # 2️⃣ Get ProjectAllocation (assignment) linked to this submission
+    # 2️⃣ Get AgentAllocation (allocation) linked to this submission
     result = connection.execute(
         select(Submission.assignment_id).where(Submission.id == submission_id)
     )
@@ -22,16 +22,16 @@ def _cascade_status(connection, submission_id: str, new_status: str):
         return
     assignment_id = assignment_id_row[0]
 
-    # 3️⃣ Update ProjectAllocation
+    # 3️⃣ Update AgentAllocation
     connection.execute(
-        update(ProjectAllocation.__table__)
-        .where(ProjectAllocation.id == assignment_id)
+        update(AgentAllocation.__table__)
+        .where(AgentAllocation.id == assignment_id)
         .values(status=new_status)
     )
 
     # 4️⃣ Get Task ID linked to the allocation
     result_task = connection.execute(
-        select(ProjectAllocation.task_id).where(ProjectAllocation.id == assignment_id)
+        select(AgentAllocation.task_id).where(AgentAllocation.id == assignment_id)
     )
     task_row = result_task.first()
     if not task_row or not task_row[0]:

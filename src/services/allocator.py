@@ -18,7 +18,7 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from src.db.models import (
-    Project, Prompt, Task, ProjectAllocation,
+    Project, Prompt, Task, AgentAllocation,
     Status
 )
 
@@ -28,7 +28,7 @@ async def allocate_project(
     user_ids: List[str],
     user_emails: List[str],
     session: AsyncSession
-) -> List[ProjectAllocation]:
+) -> List[AgentAllocation]:
     """
     Allocate tasks from a project to a set of users.
     """
@@ -58,7 +58,7 @@ async def allocate_project(
 
     # ------------------- 3. Load existing allocations -------------------
     existing_alloc_result = await session.execute(
-        select(ProjectAllocation).where(ProjectAllocation.project_id == project_id)
+        select(AgentAllocation).where(AgentAllocation.project_id == project_id)
     )
     existing_allocations = existing_alloc_result.scalars().all()
 
@@ -68,7 +68,7 @@ async def allocate_project(
         allocated_map[alloc.user_id] = allocated_map.get(alloc.user_id, 0) + 1
         existing_pairs.add((alloc.task_id, alloc.user_id))
 
-    new_allocations: List[ProjectAllocation] = []
+    new_allocations: List[AgentAllocation] = []
 
     # ------------------- 4. Round-robin allocate prompts to users -------------------
     for idx, user_id in enumerate(user_ids):
@@ -97,7 +97,7 @@ async def allocate_project(
             if (task.id, user_id) in existing_pairs:
                 continue  # skip duplicates
 
-            alloc = ProjectAllocation(
+            alloc = AgentAllocation(
                 project_id=project_id,
                 task_id=task.id,
                 user_id=user_id,

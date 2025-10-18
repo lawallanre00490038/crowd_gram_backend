@@ -10,7 +10,7 @@ from sqlmodel import select
 
 from src.db.models import (
     Submission,
-    ProjectAllocation,
+    AgentAllocation,
     TaskType,
     Status,
     Task,
@@ -80,7 +80,7 @@ async def create_submission(
     Create a submission for a task in a project (supports Telegram or direct upload).
 
     This endpoint allows a contributor (agent) to submit their response for a task they
-    have been assigned to. The submission is linked to a ProjectAllocation (assignment_id),
+    have been assigned to. The submission is linked to a AgentAllocation (assignment_id),
     ensuring only the assigned user can submit, and only once per allocation.
 
     Supported submission types:
@@ -97,7 +97,7 @@ async def create_submission(
 
     Parameters (multipart/form-data):
     - task_id: str (required) → Task being submitted.
-    - assignment_id: str (required) → Allocation ID from ProjectAllocation.
+    - assignment_id: str (required) → Allocation ID from AgentAllocation.
     - user_id: str (optional) → Contributor ID, validated against allocation.
     - user_email: str (optional) → Contributor email, validated against allocation.
     - type: TaskType (optional) → One of text, audio, image, video.
@@ -116,14 +116,14 @@ async def create_submission(
     """
     # --- Validate allocation --- also get the task prompt
     result = await session.execute(
-        select(ProjectAllocation)
+        select(AgentAllocation)
         .where(
-            ProjectAllocation.id == assignment_id,
-            ProjectAllocation.project_id == project_id
+            AgentAllocation.id == assignment_id,
+            AgentAllocation.project_id == project_id
         )
         .options(
-            selectinload(ProjectAllocation.submission),
-            selectinload(ProjectAllocation.project)
+            selectinload(AgentAllocation.submission),
+            selectinload(AgentAllocation.project)
         )
     )
     db_task_alloc = result.scalars().first()
@@ -246,7 +246,7 @@ async def list_submissions(
         List[SubmissionResponse]: Submission records with contributor and project info.
     """
 
-    # ✅ Validate allowed statuses
+    # Validate allowed statuses
     for s in status:
         if s not in ALLOWED_STATUSES:
             raise HTTPException(
@@ -254,35 +254,34 @@ async def list_submissions(
                 detail=f"Status must be one of: {[s.value for s in ALLOWED_STATUSES]}",
             )
 
-    # ✅ Build query with eager loading
+    # Build query with eager loading
     query = (
         select(Submission)
         .options(
-            selectinload(Submission.assignment).selectinload(ProjectAllocation.project),
+            selectinload(Submission.allocation).selectinload(AgentAllocation.project),
             selectinload(Submission.task).selectinload(Task.prompt),
             selectinload(Submission.user),
         )
     )
 
-    # ✅ Filter by project
+    # Filter by project
     if project_id:
-        query = query.join(Submission.assignment).where(ProjectAllocation.project_id == project_id)
+        query = query.join(Submission.allocation).where(AgentAllocation.project_id == project_id)
 
-    # ✅ Filter by contributor (ID or email)
+    # Filter by contributor (ID or email)
     if user_id:
         query = query.where(Submission.user_id == user_id)
     elif user_email:
         query = query.join(Submission.user).where(User.email == user_email)
 
-    # ✅ Fix status filtering (use IN instead of ==)
     if status:
         query = query.where(Submission.status.in_(status))
 
-    # ✅ Execute
+    # Execute
     result = await session.execute(query)
     submissions = result.scalars().unique().all()  # unique() prevents duplicates from joins
 
-    # ✅ Construct response list
+    # Construct response list
     submission_list = []
     for s in submissions:
         prompt_obj = s.task.prompt if s.task and s.task.prompt else None
@@ -291,7 +290,7 @@ async def list_submissions(
             payload_text = payload_text[0]
 
         project_id_resp = (
-            s.assignment.project_id if s.assignment else s.task.project_id if s.task else None
+            s.allocation.project_id if s.allocation else s.task.project_id if s.task else None
         )
 
         submission_list.append(
@@ -342,7 +341,7 @@ async def get_submission(
         session (Session): Database session dependency.
 
     Returns:
-        Submission: Submission record including linked assignment and task.
+        Submission: Submission record including linked allocation and task.
 
     Raises:
         HTTPException: 404 if the submission does not exist.
@@ -356,7 +355,7 @@ async def get_submission(
         .options(
             selectinload(Submission.task)
             .selectinload(Task.prompt),        # load prompt under task
-            selectinload(Submission.assignment),
+            selectinload(Submission.allocation),
             selectinload(Submission.user)
         )
     )
@@ -364,7 +363,7 @@ async def get_submission(
     if not submission:
         raise HTTPException(status_code=404, detail="Submission not found")
 
-    project_id = submission.assignment.project_id if submission.assignment else submission.task.project_id if submission.task else None
+    project_id = submission.allocation.project_id if submission.allocation else submission.task.project_id if submission.task else None
 
     payload_text=get_effective_payload_text(submission, submission.task.prompt),
     if isinstance(payload_text, tuple) and len(payload_text) == 1:

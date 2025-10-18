@@ -10,7 +10,7 @@ This project implements a scalable and modular FastAPI backend for a Telegram-ba
 - **AWS S3 Integration**: Securely store audio and image files.
 - **PostgreSQL Database**: Store all metadata and application data using SQLModel.
 - **Analytics & Reporting**: Track contributor and reviewer performance, with data export capabilities.
-- **Telegram Integration Hooks**: Facilitate communication and task assignment via Telegram.
+- **Telegram Integration Hooks**: Facilitate communication and task allocation via Telegram.
 - **Modular Architecture**: Organized into routers, models, and utilities for maintainability.
 
 ## Project Structure

@@ -11,7 +11,7 @@ from datetime import datetime
 
 from src.db.database import get_session
 from src.utils.build_task_details import build_task_details
-from src.db.models import Project, ProjectAllocation, Status, Task, Submission, ReviewerAllocation, CoinPayment, User, Role, ProjectReviewer, Review
+from src.db.models import Project, AgentAllocation, Status, Task, Submission, ReviewerAllocation, CoinPayment, User, Role, ProjectReviewer, Review
 from src.schemas.project_schemas import (
     ProjectCreate,
     ProjectUpdate,
@@ -216,7 +216,7 @@ async def get_assigned_users_by_role(
     """
     List all users assigned to a project according to their role.
 
-    - role=agent → users who have allocations (ProjectAllocation -> Task -> Project)
+    - role=agent → users who have allocations (AgentAllocation -> Task -> Project)
     - role=reviewer → users who:
         1. Are in ProjectReviewer (pre-added)
         2. Have ReviewerAllocations (assigned to review)
@@ -231,8 +231,8 @@ async def get_assigned_users_by_role(
         # Users who have allocations in this project's tasks
         result = await session.execute(
             select(User)
-            .join(ProjectAllocation, ProjectAllocation.user_id == User.id)
-            .join(Task, Task.id == ProjectAllocation.task_id)
+            .join(AgentAllocation, AgentAllocation.user_id == User.id)
+            .join(Task, Task.id == AgentAllocation.task_id)
             .where(Task.project_id == project_id)
             .distinct()
         )
@@ -313,7 +313,7 @@ async def get_projects_by_email(
             select(Project.id)
             .join(Project.tasks)
             .join(Task.allocations)
-            .join(ProjectAllocation.user)
+            .join(AgentAllocation.user)
             .where(User.email == email)
         )
         project_ids = [pid for (pid,) in result.all()]
@@ -388,10 +388,10 @@ async def list_project_tasks_by_role(
                 selectinload(Project.tasks).selectinload(Task.prompt),
                 selectinload(Project.tasks)
                     .selectinload(Task.allocations)
-                    .selectinload(ProjectAllocation.user),
+                    .selectinload(AgentAllocation.user),
                 selectinload(Project.tasks)
                     .selectinload(Task.allocations)
-                    .selectinload(ProjectAllocation.submission)
+                    .selectinload(AgentAllocation.submission)
                     .options(
                         selectinload(Submission.reviews),
                         selectinload(Submission.review_allocations)
@@ -569,10 +569,10 @@ async def list_project_tasks_general(
             selectinload(Project.tasks).selectinload(Task.prompt),
             selectinload(Project.tasks)
                 .selectinload(Task.allocations)
-                .selectinload(ProjectAllocation.user),
+                .selectinload(AgentAllocation.user),
             selectinload(Project.tasks)
                 .selectinload(Task.allocations)
-                .selectinload(ProjectAllocation.submission)
+                .selectinload(AgentAllocation.submission)
                 .options(
                     selectinload(Submission.reviews),
                     selectinload(Submission.review_allocations)

@@ -66,7 +66,7 @@ class Project(SQLModel, table=True):
 
     # relationships
     sentences: List["ProjectSentence"] = Relationship(back_populates="project")
-    allocations: List["ProjectAllocation"] = Relationship(back_populates="project")
+    allocations: List["AgentAllocation"] = Relationship(back_populates="project")
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow, sa_column_kwargs={"onupdate": datetime.utcnow})
@@ -110,7 +110,7 @@ class ProjectSentence(SQLModel, table=True):
 
     
 
-class ProjectAllocation(SQLModel, table=True):
+class AgentAllocation(SQLModel, table=True):
     id: Optional[str] = Field(
         sa_column=Column(
             pg.VARCHAR,
@@ -188,7 +188,7 @@ class User(SQLModel, table=True):
         back_populates="user",
         sa_relationship_kwargs={"foreign_keys": "[AuditLog.user_id]"}
     )
-    allocations: List[ProjectAllocation] = Relationship(back_populates="user")
+    allocations: List[AgentAllocation] = Relationship(back_populates="user")
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now, sa_column_kwargs={"onupdate": datetime.now})
 
@@ -314,7 +314,7 @@ class CoinPayment(SQLModel, table=True):
     approved: bool = Field(default=False)
 
     project_id: Optional[str] = Field(foreign_key="project.id")
-    allocation_id: Optional[str] = Field(foreign_key="projectallocation.id")
+    allocation_id: Optional[str] = Field(foreign_key="agentallocation.id")
 
     # Relationships
 

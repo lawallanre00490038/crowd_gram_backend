@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 import pandas as pd
-from src.db.models import Task, ProjectAllocation, Prompt, Project, Status, User, TaskType
+from src.db.models import Task, AgentAllocation, Prompt, Project, Status, User, TaskType
 from src.db.database import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -136,7 +136,7 @@ async def delete_task(task_id: str, session: AsyncSession = Depends(get_session)
 #     session: AsyncSession = Depends(get_session),
 # ):
 #     """
-#     Upload an Excel file to batch create and allocate audio tasks using **user email** for assignment.
+#     Upload an Excel file to batch create and allocate audio tasks using **user email** for allocation.
 
 #     **Expected Excel Columns**:
 #     - sentence_id: Unique identifier for the sentence
@@ -274,7 +274,7 @@ async def delete_task(task_id: str, session: AsyncSession = Depends(get_session)
 #             await session.flush()
 
 #             # Allocate task
-#             allocation = ProjectAllocation(
+#             allocation = AgentAllocation(
 #                 project_id=project_id,
 #                 task_id=task.id,
 #                 user_id=user.id,
@@ -323,7 +323,7 @@ async def allocate_project_read_users(
     session: AsyncSession = Depends(get_session),
 ):
     """
-    Upload an Excel file to batch create and allocate audio tasks using **user email** for assignment.
+    Upload an Excel file to batch create and allocate audio tasks using **user email** for allocation.
 
     **Expected Excel Columns**:
     - sentence_id: Unique identifier for the sentence
@@ -420,7 +420,7 @@ async def allocate_project_read_users(
             await session.flush()
 
             # Allocate task
-            allocation = ProjectAllocation(
+            allocation = AgentAllocation(
                 project_id=project_id,
                 task_id=task.id,
                 user_id=user.id,

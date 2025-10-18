@@ -3914,7 +3914,7 @@ TimeoutError
 2025-10-17 13:13:18,622 - INFO - 127.0.0.1:62968 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 13.36s
 2025-10-17 13:13:54,975 - INFO - 127.0.0.1:52394 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 8.42s
 2025-10-17 13:18:27,303 - ERROR - Database integrity error at POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 [SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
 [parameters: ('4519e1d4-f573-4e1b-8513-1f255318cee8', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 18, 26, 886937), datetime.datetime(2025, 10, 17, 12, 18, 26, 886937))]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
@@ -3933,7 +3933,7 @@ DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not prese
            ^^^^^^^^^^^^^^^^^^^^^^^^
   File "asyncpg\\protocol\\protocol.pyx", line 206, in bind_execute
 asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 
 The above exception was the direct cause of the following exception:
 
@@ -3957,7 +3957,7 @@ Traceback (most recent call last):
   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
     raise translated_error from error
 sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 
 The above exception was the direct cause of the following exception:
 
@@ -4048,14 +4048,14 @@ Traceback (most recent call last):
   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
     raise translated_error from error
 sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 [SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
 [parameters: ('4519e1d4-f573-4e1b-8513-1f255318cee8', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 18, 26, 886937), datetime.datetime(2025, 10, 17, 12, 18, 26, 886937))]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 2025-10-17 13:18:27,355 - INFO - 127.0.0.1:54203 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [93m400[0m - Time: 14.21s - Reason: Database error occurred
 2025-10-17 13:19:14,346 - ERROR - Database integrity error at POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 [SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
 [parameters: ('017e2f80-f918-4d4b-b2f5-ff6e1b0bcd28', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 19, 13, 409460), datetime.datetime(2025, 10, 17, 12, 19, 13, 409460))]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
@@ -4074,7 +4074,7 @@ DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not prese
            ^^^^^^^^^^^^^^^^^^^^^^^^
   File "asyncpg\\protocol\\protocol.pyx", line 206, in bind_execute
 asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 
 The above exception was the direct cause of the following exception:
 
@@ -4098,7 +4098,7 @@ Traceback (most recent call last):
   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
     raise translated_error from error
 sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 
 The above exception was the direct cause of the following exception:
 
@@ -4189,7 +4189,7 @@ Traceback (most recent call last):
   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
     raise translated_error from error
 sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not present in table "agentallocation".
 [SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
 [parameters: ('017e2f80-f918-4d4b-b2f5-ff6e1b0bcd28', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '027a1ebe-2aa2-479e-941d-9ca5a668a7d5', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 12, 19, 13, 409460), datetime.datetime(2025, 10, 17, 12, 19, 13, 409460))]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
@@ -4201,7 +4201,7 @@ DETAIL:  Key (assignment_id)=(027a1ebe-2aa2-479e-941d-9ca5a668a7d5) is not prese
 2025-10-17 13:27:15,321 - INFO - 127.0.0.1:53760 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.75s
 2025-10-17 13:28:52,901 - INFO - 127.0.0.1:49900 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 5.02s
 2025-10-17 14:19:29,014 - ERROR - Database integrity error at POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "agentallocation".
 [SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
 [parameters: ('bb8c3281-12c0-46da-9813-0cc1331e2f94', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '30f8093c-0883-470e-b17a-ee392efaa263', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 13, 19, 28, 365002), datetime.datetime(2025, 10, 17, 13, 19, 28, 365002))]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
@@ -4220,7 +4220,7 @@ DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not prese
            ^^^^^^^^^^^^^^^^^^^^^^^^
   File "asyncpg\\protocol\\protocol.pyx", line 206, in bind_execute
 asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "agentallocation".
 
 The above exception was the direct cause of the following exception:
 
@@ -4244,7 +4244,7 @@ Traceback (most recent call last):
   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
     raise translated_error from error
 sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "agentallocation".
 
 The above exception was the direct cause of the following exception:
 
@@ -4335,10 +4335,512 @@ Traceback (most recent call last):
   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 797, in _handle_exception
     raise translated_error from error
 sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "coinpayment" violates foreign key constraint "coinpayment_assignment_id_fkey"
-DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "projectallocation".
+DETAIL:  Key (assignment_id)=(30f8093c-0883-470e-b17a-ee392efaa263) is not present in table "agentallocation".
 [SQL: INSERT INTO coinpayment (id, user_id, task_id, assignment_id, project_id, coins_earned, approved, created_at, updated_at) VALUES ($1::VARCHAR, $2::VARCHAR, $3::VARCHAR, $4::VARCHAR, $5::VARCHAR, $6::FLOAT, $7::BOOLEAN, $8::TIMESTAMP WITHOUT TIME ZONE, $9::TIMESTAMP WITHOUT TIME ZONE)]
 [parameters: ('bb8c3281-12c0-46da-9813-0cc1331e2f94', '3c3a39eb-e2f0-4d68-af12-b2afc8f582a2', None, '30f8093c-0883-470e-b17a-ee392efaa263', 'africa', 10.0, True, datetime.datetime(2025, 10, 17, 13, 19, 28, 365002), datetime.datetime(2025, 10, 17, 13, 19, 28, 365002))]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
 
 2025-10-17 14:19:29,031 - INFO - 127.0.0.1:63305 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [93m400[0m - Time: 12.10s - Reason: Database error occurred
 2025-10-17 14:35:13,880 - INFO - 127.0.0.1:64615 - POST /api/v1/reviewer/submissions/027a1ebe-2aa2-479e-941d-9ca5a668a7d5/review - Status: [92m200[0m - Time: 15.17s
+2025-10-18 14:48:08,251 - INFO - 127.0.0.1:63738 - GET / - Status: [92m200[0m - Time: 0.00s
+2025-10-18 14:48:08,396 - INFO - 127.0.0.1:63738 - GET /favicon.ico - Status: [93m404[0m - Time: 0.00s - Reason: Not Found
+2025-10-18 14:48:56,954 - INFO - 127.0.0.1:51793 - GET /api/v1/docs - Status: [92m200[0m - Time: 0.00s
+2025-10-18 14:48:57,702 - INFO - 127.0.0.1:51793 - GET /api/v1/openapi.json - Status: [92m200[0m - Time: 0.58s
+2025-10-18 14:49:35,840 - INFO - 127.0.0.1:58210 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 8.57s
+2025-10-18 14:49:54,423 - INFO - 127.0.0.1:52431 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.57s
+2025-10-18 14:50:35,552 - INFO - 127.0.0.1:50484 - GET /api/v1/project/project/africa/assigned-users - Status: [92m200[0m - Time: 2.29s
+2025-10-18 14:52:01,582 - INFO - 127.0.0.1:49678 - POST /api/v1/submission/projects/africa/agent - Status: [92m200[0m - Time: 8.46s
+2025-10-18 14:53:37,522 - INFO - 127.0.0.1:61082 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 4.32s
+2025-10-18 14:53:46,963 - INFO - 127.0.0.1:49406 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.54s
+2025-10-18 14:55:27,159 - INFO - 127.0.0.1:65164 - POST /api/v1/reviewer/assign_submission_to_reviewer/ - Status: [92m200[0m - Time: 8.48s
+2025-10-18 14:55:46,871 - INFO - 127.0.0.1:53569 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 4.05s
+2025-10-18 14:56:20,148 - INFO - 127.0.0.1:51196 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.89s
+2025-10-18 14:57:00,986 - ERROR - HTTPException: Status must be one of: ['pending', 'accepted', 'rejected', 'redo', 'rejected', 'submitted', 'assigned'] at GET /api/v1/project/africa/tasks/detailed
+2025-10-18 14:57:00,987 - INFO - 127.0.0.1:57680 - GET /api/v1/project/africa/tasks/detailed - Status: [93m400[0m - Time: 1.51s - Reason: Status must be one of: ['pending', 'accepted', 'rejected', 'redo', 'rejected', 'submitted', 'assigned']
+2025-10-18 14:57:34,336 - INFO - 127.0.0.1:49905 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.71s
+2025-10-18 14:59:01,390 - INFO - 127.0.0.1:55959 - PATCH /api/v1/reviewer/update/4faf84d9-d503-4cad-a955-daec4067f9a2/review - Status: [92m200[0m - Time: 7.63s
+2025-10-18 14:59:50,718 - INFO - 127.0.0.1:59248 - PATCH /api/v1/reviewer/update/4faf84d9-d503-4cad-a955-daec4067f9a2/review - Status: [91m500[0m - Time: 9.85s - Reason: {'message': 'Database error occurred', 'resolution': 'Please try again later', 'error_code': 'database_error'}
+2025-10-18 15:42:20,607 - INFO - 127.0.0.1:61983 - GET /api/v1/project/project/africa/review-parameters - Status: [92m200[0m - Time: 1.82s
+2025-10-18 15:42:39,886 - ERROR - HTTPException: Reviewer not found at POST /api/v1/reviewer/submissions/4faf84d9-d503-4cad-a955-daec4067f9a2/review
+2025-10-18 15:42:39,886 - INFO - 127.0.0.1:55237 - POST /api/v1/reviewer/submissions/4faf84d9-d503-4cad-a955-daec4067f9a2/review - Status: [93m404[0m - Time: 3.13s - Reason: Reviewer not found
+2025-10-18 15:43:16,321 - INFO - 127.0.0.1:51487 - POST /api/v1/reviewer/submissions/4faf84d9-d503-4cad-a955-daec4067f9a2/review - Status: [92m200[0m - Time: 16.75s
+2025-10-18 15:43:50,007 - INFO - 127.0.0.1:52465 - PATCH /api/v1/reviewer/update/4faf84d9-d503-4cad-a955-daec4067f9a2/review - Status: [92m200[0m - Time: 7.16s
+2025-10-18 15:45:06,130 - INFO - 127.0.0.1:51818 - GET /api/v1/submission/all/agent - Status: [92m200[0m - Time: 3.69s
+2025-10-18 15:46:07,197 - ERROR - HTTPException: Status must be one of: ['assigned', 'accepted', 'rejected', 'redo', 'submitted'] at GET /api/v1/submission/all/agent
+2025-10-18 15:46:07,205 - INFO - 127.0.0.1:55895 - GET /api/v1/submission/all/agent - Status: [93m400[0m - Time: 0.01s - Reason: Status must be one of: ['assigned', 'accepted', 'rejected', 'redo', 'submitted']
+2025-10-18 15:46:18,058 - INFO - 127.0.0.1:55934 - GET /api/v1/submission/all/agent - Status: [92m200[0m - Time: 3.17s
+2025-10-18 15:48:58,927 - INFO - 127.0.0.1:49705 - GET /api/v1/submission/all/agent - Status: [92m200[0m - Time: 3.64s
+2025-10-18 15:55:10,616 - ERROR - Unhandled error for POST /api/v1/reviewer/upload_reviewer_allocations/
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 151, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 148, in upload_reviewer_allocations
+    df = pd.read_excel(BytesIO(await file.read()))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 495, in read_excel
+    io = ExcelFile(
+         ^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+2025-10-18 15:55:10,663 - ERROR - Unhandled exception at POST /api/v1/reviewer/upload_reviewer_allocations/: Excel file format cannot be determined, you must specify an engine manually.
+2025-10-18 15:55:10,691 - ERROR -   + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 79, in collapse_excgroups
+  |     yield
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 183, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 781, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    |     await self.simple_response(scope, receive, send, request_headers=headers)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 182, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |   File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    |     self.gen.throw(value)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 184, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 108, in log_requests
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    |     raise app_exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 148, in upload_reviewer_allocations
+    |     df = pd.read_excel(BytesIO(await file.read()))
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 495, in read_excel
+    |     io = ExcelFile(
+    |          ^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1554, in __init__
+    |     raise ValueError(
+    | ValueError: Excel file format cannot be determined, you must specify an engine manually.
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 182, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 184, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 108, in log_requests
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 148, in upload_reviewer_allocations
+    df = pd.read_excel(BytesIO(await file.read()))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 495, in read_excel
+    io = ExcelFile(
+         ^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1554, in __init__
+    raise ValueError(
+ValueError: Excel file format cannot be determined, you must specify an engine manually.
+
+2025-10-18 15:57:05,975 - ERROR - Unhandled error for POST /api/v1/reviewer/upload_reviewer_allocations/
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 151, in call_next
+    message = await recv_stream.receive()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\anyio\streams\memory.py", line 126, in receive
+    raise EndOfStream from None
+anyio.EndOfStream
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 148, in upload_reviewer_allocations
+    df = pd.read_excel(BytesIO(await file.read()), engine="openpyxl")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 495, in read_excel
+    io = ExcelFile(
+         ^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1567, in __init__
+    self._reader = self._engines[engine](
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 553, in __init__
+    super().__init__(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 573, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 572, in load_workbook
+    return load_workbook(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py", line 1349, in __init__
+    self._RealGetContents()
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py", line 1416, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+2025-10-18 15:57:05,990 - ERROR - Unhandled exception at POST /api/v1/reviewer/upload_reviewer_allocations/: File is not a zip file
+2025-10-18 15:57:06,012 - ERROR -   + Exception Group Traceback (most recent call last):
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 79, in collapse_excgroups
+  |     yield
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 183, in __call__
+  |     async with anyio.create_task_group() as task_group:
+  |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 781, in __aexit__
+  |     raise BaseExceptionGroup(
+  | ExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | Traceback (most recent call last):
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    |     await self.app(scope, receive, _send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    |     await self.simple_response(scope, receive, send, request_headers=headers)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 182, in __call__
+    |     with recv_stream, send_stream, collapse_excgroups():
+    |   File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    |     self.gen.throw(value)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 184, in __call__
+    |     response = await self.dispatch_func(request, call_next)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 108, in log_requests
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    |     response = await call_next(request)
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    |     raise app_exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    |     await self.app(scope, receive_or_disconnect, send_no_error)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    |     await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    |     await self.middleware_stack(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    |     await route.handle(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    |     await self.app(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    |     await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    |     raise exc
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    |     await app(scope, receive, sender)
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    |     response = await f(request)
+    |                ^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    |     raw_response = await run_endpoint_function(
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    |     return await dependant.call(**values)
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 148, in upload_reviewer_allocations
+    |     df = pd.read_excel(BytesIO(await file.read()), engine="openpyxl")
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 495, in read_excel
+    |     io = ExcelFile(
+    |          ^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1567, in __init__
+    |     self._reader = self._engines[engine](
+    |                    ^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 553, in __init__
+    |     super().__init__(
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 573, in __init__
+    |     self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 572, in load_workbook
+    |     return load_workbook(
+    |            ^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 346, in load_workbook
+    |     reader = ExcelReader(filename, read_only, keep_vba,
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 123, in __init__
+    |     self.archive = _validate_archive(fn)
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 95, in _validate_archive
+    |     archive = ZipFile(filename, 'r')
+    |               ^^^^^^^^^^^^^^^^^^^^^^
+    |   File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py", line 1349, in __init__
+    |     self._RealGetContents()
+    |   File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py", line 1416, in _RealGetContents
+    |     raise BadZipFile("File is not a zip file")
+    | zipfile.BadZipFile: File is not a zip file
+    +------------------------------------
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 144, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 182, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_utils.py", line 85, in collapse_excgroups
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 184, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 108, in log_requests
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\middleware.py", line 105, in log_requests
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 159, in call_next
+    raise app_exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 123, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 109, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 389, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\fastapi\routing.py", line 288, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\src\routers\reviewer.py", line 148, in upload_reviewer_allocations
+    df = pd.read_excel(BytesIO(await file.read()), engine="openpyxl")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 495, in read_excel
+    io = ExcelFile(
+         ^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 1567, in __init__
+    self._reader = self._engines[engine](
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 553, in __init__
+    super().__init__(
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_base.py", line 573, in __init__
+    self.book = self.load_workbook(self.handles.handle, engine_kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\pandas\io\excel\_openpyxl.py", line 572, in load_workbook
+    return load_workbook(
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 346, in load_workbook
+    reader = ExcelReader(filename, read_only, keep_vba,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 123, in __init__
+    self.archive = _validate_archive(fn)
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\Desktop\Lanre\Softmax Tech Solutions\aiogram_backend\venv\Lib\site-packages\openpyxl\reader\excel.py", line 95, in _validate_archive
+    archive = ZipFile(filename, 'r')
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py", line 1349, in __init__
+    self._RealGetContents()
+  File "C:\Users\Olanrewaju Lawal\AppData\Local\Programs\Python\Python312\Lib\zipfile\__init__.py", line 1416, in _RealGetContents
+    raise BadZipFile("File is not a zip file")
+zipfile.BadZipFile: File is not a zip file
+
+2025-10-18 16:04:39,688 - INFO - 127.0.0.1:65453 - POST /api/v1/reviewer/upload_reviewer_allocations/ - Status: [92m200[0m - Time: 11.30s
+2025-10-18 16:06:10,692 - INFO - 127.0.0.1:53282 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 7.01s
+2025-10-18 16:09:09,195 - INFO - 127.0.0.1:53274 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 4.10s
+2025-10-18 16:11:41,074 - INFO - 127.0.0.1:50280 - POST /api/v1/reviewer/submissions/d3b39b5c-da31-467b-8a64-9e10e1ce9ca1/review - Status: [92m200[0m - Time: 17.86s
+2025-10-18 16:11:54,717 - INFO - 127.0.0.1:54879 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 3.66s
+2025-10-18 16:14:00,683 - INFO - 127.0.0.1:60661 - POST /api/v1/reviewer/submissions/904febcc-6abf-49ad-a049-ed1fef34b4c8/review - Status: [92m200[0m - Time: 11.94s
+2025-10-18 16:14:08,575 - INFO - 127.0.0.1:57686 - GET /api/v1/project/africa/tasks/detailed - Status: [92m200[0m - Time: 10.04s
+2025-10-18 16:15:16,093 - ERROR - HTTPException: Reviewer not found at GET /api/v1/reviewer/ibrahim/filter
+2025-10-18 16:15:16,093 - INFO - 127.0.0.1:54678 - GET /api/v1/reviewer/ibrahim/filter - Status: [93m404[0m - Time: 1.44s - Reason: Reviewer not found
+2025-10-18 16:15:27,923 - INFO - 127.0.0.1:52477 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [92m200[0m - Time: 2.11s
+2025-10-18 16:15:45,478 - INFO - 127.0.0.1:54087 - GET /api/v1/reviewer/ibrahim@example.com/filter - Status: [92m200[0m - Time: 3.52s
+2025-10-18 16:16:46,880 - INFO - 127.0.0.1:52639 - GET /api/v1/status/reviewer/ibrahim@example.com - Status: [92m200[0m - Time: 5.11s

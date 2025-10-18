@@ -7,12 +7,12 @@ from src.schemas.status import (
     ContributorStats,
 )
 from sqlalchemy.orm import selectinload
-from src.db.models import ProjectAllocation
+from src.db.models import AgentAllocation
 
 from src.db.models import (
     User,
     Project,
-    ProjectAllocation,
+    AgentAllocation,
     Submission,
     CoinPayment,
     Status,
@@ -34,12 +34,12 @@ async def get_contributor_stats(
     if not user:
         return {"error": f"No user found with email {email}"}
 
-    # Step 2a: Submissions (with assignment + project eager loaded)
+    # Step 2a: Submissions (with allocation + project eager loaded)
     sub_query = (
         select(Submission)
         .where(Submission.user_id == user.id)
         .options(
-            selectinload(Submission.assignment).selectinload(ProjectAllocation.project)
+            selectinload(Submission.allocation).selectinload(AgentAllocation.project)
         )
     )
     if start:
@@ -51,11 +51,11 @@ async def get_contributor_stats(
 
     # Step 2b: Allocations (with project eager loaded)
     alloc_query = (
-        select(ProjectAllocation)
-        .where(ProjectAllocation.user_id == user.id)
-        .options(selectinload(ProjectAllocation.project))
+        select(AgentAllocation)
+        .where(AgentAllocation.user_id == user.id)
+        .options(selectinload(AgentAllocation.project))
     )
-    allocations: List[ProjectAllocation] = (await session.execute(alloc_query)).scalars().all()
+    allocations: List[AgentAllocation] = (await session.execute(alloc_query)).scalars().all()
 
     # Step 3: Overall submission stats
     total = len(submissions)
@@ -72,7 +72,7 @@ async def get_contributor_stats(
 
     # Initialize all projects from allocations and submissions
     for item in allocations + [
-        s.assignment for s in submissions if s.assignment
+        s.allocation for s in submissions if s.allocation
     ]:
         if not item or not item.project:
             continue
@@ -95,7 +95,7 @@ async def get_contributor_stats(
 
     # Submissions contribute to totals
     for sub in submissions:
-        alloc = sub.assignment
+        alloc = sub.allocation
         if not alloc or not alloc.project:
             continue
         key = alloc.project.id
@@ -119,7 +119,7 @@ async def get_contributor_stats(
     # Fill total_submissions, total_coins_earned, and total_amount_earned per project
     for key, stats in project_stats.items():
         stats["total_submissions"] = sum(
-            1 for s in submissions if s.assignment and s.assignment.project.id == key
+            1 for s in submissions if s.allocation and s.allocation.project.id == key
         )
         stats["total_coins_earned"] = sum(
             c.coins_earned for c in coin_payments if c.project_id == key
@@ -155,8 +155,8 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
         .where(ReviewerAllocation.reviewer_id == reviewer.id)
         .options(
             selectinload(ReviewerAllocation.submission)
-            .selectinload(Submission.assignment)
-            .selectinload(ProjectAllocation.project)
+            .selectinload(Submission.allocation)
+            .selectinload(AgentAllocation.project)
         )
     )
     if start:
@@ -171,8 +171,8 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
         .where(Review.reviewer_id == reviewer.id)
         .options(
             selectinload(Review.submission)
-            .selectinload(Submission.assignment)
-            .selectinload(ProjectAllocation.project)
+            .selectinload(Submission.allocation)
+            .selectinload(AgentAllocation.project)
         )
     )
     if start:
@@ -197,7 +197,7 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
 
     all_related_items = allocations + [r.submission for r in reviews if r.submission]
     for item in all_related_items:
-        project = item.submission.assignment.project if hasattr(item, 'submission') and item.submission and item.submission.assignment else None
+        project = item.submission.allocation.project if hasattr(item, 'submission') and item.submission and item.submission.allocation else None
         if not project:
             continue
         
@@ -217,12 +217,12 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
             }
 
     for alloc in allocations:
-        project = alloc.submission.assignment.project if alloc.submission and alloc.submission.assignment else None
+        project = alloc.submission.allocation.project if alloc.submission and alloc.submission.allocation else None
         if project and project.id in project_stats:
             project_stats[project.id]["number_assigned"] += 1
 
     for review in reviews:
-        project = review.submission.assignment.project if review.submission and review.submission.assignment else None
+        project = review.submission.allocation.project if review.submission and review.submission.allocation else None
         if project and project.id in project_stats:
             stats = project_stats[project.id]
             stats["total_reviewed"] += 1
@@ -265,8 +265,8 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
 #         .where(ReviewerAllocation.reviewer_id == reviewer.id)
 #         .options(
 #             selectinload(ReviewerAllocation.submission)
-#             .selectinload(Submission.assignment)
-#             .selectinload(ProjectAllocation.project)
+#             .selectinload(Submission.allocation)
+#             .selectinload(AgentAllocation.project)
 #         )
 #     )
 #     if start:
@@ -282,8 +282,8 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
 #         .where(Review.reviewer_id == reviewer.id)
 #         .options(
 #             selectinload(Review.submission)
-#             .selectinload(Submission.assignment)
-#             .selectinload(ProjectAllocation.project)
+#             .selectinload(Submission.allocation)
+#             .selectinload(AgentAllocation.project)
 #         )
 #     )
 #     if start:
@@ -303,7 +303,7 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
 #     # number assigned per project
 #     for alloc in allocations:
 #         submission = alloc.submission
-#         project = submission.assignment.project if submission and submission.assignment else None
+#         project = submission.allocation.project if submission and submission.allocation else None
 #         if not project:
 #             continue
 #         key = project.id
@@ -322,7 +322,7 @@ async def get_reviewer_stats(session: AsyncSession, email: str, start: datetime 
 #     # add completed reviews per project
 #     for review in reviews:
 #         submission = review.submission
-#         project = submission.assignment.project if submission and submission.assignment else None
+#         project = submission.allocation.project if submission and submission.allocation else None
 #         if not project:
 #             continue
 #         key = project.id
@@ -366,7 +366,7 @@ async def get_platform_stats(session: AsyncSession):
 
     total_users = (await session.execute(select(func.count()).select_from(User))).scalar()
     total_projects = (await session.execute(select(func.count()).select_from(Project))).scalar()
-    total_allocations = (await session.execute(select(func.count()).select_from(ProjectAllocation))).scalar()
+    total_allocations = (await session.execute(select(func.count()).select_from(AgentAllocation))).scalar()
 
     submissions_result = await session.execute(select(Submission))
     submissions: List[Submission] = submissions_result.scalars().all()

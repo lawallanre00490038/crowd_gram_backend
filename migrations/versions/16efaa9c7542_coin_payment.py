@@ -26,7 +26,7 @@ def upgrade() -> None:
     op.add_column('coinpayment', sa.Column('reviewer_allocation_id', sqlmodel.sql.sqltypes.AutoString(), nullable=True))
     op.drop_constraint('coinpayment_assignment_id_fkey', 'coinpayment', type_='foreignkey')
     op.create_foreign_key(None, 'coinpayment', 'reviewerallocation', ['reviewer_allocation_id'], ['id'])
-    op.create_foreign_key(None, 'coinpayment', 'projectallocation', ['project_allocation_id'], ['id'])
+    op.create_foreign_key(None, 'coinpayment', 'agentallocation', ['project_allocation_id'], ['id'])
     op.drop_column('coinpayment', 'assignment_id')
     # ### end Alembic commands ###
 
@@ -37,7 +37,7 @@ def downgrade() -> None:
     op.add_column('coinpayment', sa.Column('assignment_id', sa.VARCHAR(), autoincrement=False, nullable=True))
     op.drop_constraint(None, 'coinpayment', type_='foreignkey')
     op.drop_constraint(None, 'coinpayment', type_='foreignkey')
-    op.create_foreign_key('coinpayment_assignment_id_fkey', 'coinpayment', 'projectallocation', ['assignment_id'], ['id'])
+    op.create_foreign_key('coinpayment_assignment_id_fkey', 'coinpayment', 'agentallocation', ['assignment_id'], ['id'])
     op.drop_column('coinpayment', 'reviewer_allocation_id')
     op.drop_column('coinpayment', 'project_allocation_id')
     # ### end Alembic commands ###

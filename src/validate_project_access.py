@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlmodel import Session, select
-from src.db.models import Project, ProjectAllocation
+from src.db.models import Project, AgentAllocation
 from sqlalchemy.ext.asyncio import AsyncSession
 
 async def validate_project_access(session: AsyncSession, project_id: str, user_id: str):
@@ -12,9 +12,9 @@ async def validate_project_access(session: AsyncSession, project_id: str, user_i
         return project
 
     # private project: check allocation
-    alloc = await session.execute(select(ProjectAllocation).where(
-            ProjectAllocation.project_id == project_id,
-            ProjectAllocation.user_id == user_id
+    alloc = await session.execute(select(AgentAllocation).where(
+            AgentAllocation.project_id == project_id,
+            AgentAllocation.user_id == user_id
         )
     ).first()
 

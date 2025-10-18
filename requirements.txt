@@ -12,7 +12,8 @@ asyncpg
 colorlog
 
 
-
+openpyxl 
+xlrd
 passlib
 bcrypt==4.0.1
 PyJWT

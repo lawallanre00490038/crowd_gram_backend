@@ -1,6 +1,6 @@
 from typing import Optional, List
 from src.schemas.project_schemas import TaskWithDetails, PromptInfo, SubmissionInfo, ReviewInfo, ReviewerInfo, TaskWithDetailsReview
-from src.db.models import Task, ProjectAllocation, Submission, ReviewerAllocation, Review, CoinPayment
+from src.db.models import Task, AgentAllocation, Submission, ReviewerAllocation, Review, CoinPayment
 
 
 
@@ -10,7 +10,7 @@ from src.db.models import Task, ProjectAllocation, Submission, ReviewerAllocatio
 
 async def build_task_details(
     task: Task,
-    alloc: Optional[ProjectAllocation] = None,
+    alloc: Optional[AgentAllocation] = None,
     submission: Optional[Submission] = None,
     rev_alloc: Optional[ReviewerAllocation] = None,
     review: Optional[Review] = None,
